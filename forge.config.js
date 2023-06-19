@@ -1,4 +1,17 @@
 module.exports = {
+  publishers: [
+    {
+      name: '@electron-forge/publisher-github',
+      config: {
+        repository: {
+          owner: 'jonfleming',
+          name: 'PersonalAI'
+        },
+        prerelease: false,
+        draft: true
+      }
+    }
+  ],  
   packagerConfig: {
     asar: true,
   },
