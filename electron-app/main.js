@@ -23,8 +23,11 @@ const createWindow = () => {
     }
   })
   
-  win.loadFile("index.html").catch(err => {})
-
+  if(app.isPackaged) {
+    win.loadFile('index.html'); // prod
+  } else {
+    win.loadURL('http://localhost:3000'); // dev
+  }
   return win
 }
 
