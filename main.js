@@ -1,6 +1,18 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, dialog, ipcMain } = require("electron")
 const path = require('path')
 
+function handleSetTitle (event, title) {
+  const webContents = event.sender
+  const win = BrowserWindow.fromWebContents(webContents)
+  win.setTitle(title)
+}
+
+async function handleFileOpen () {
+  const { canceled, filePaths } = await dialog.showOpenDialog({})
+  if (!canceled) {
+    return filePaths[0]
+  }
+}
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -9,14 +21,19 @@ const createWindow = () => {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
-  });
+  })
+  
+  win.loadFile("index.html").catch(err => {})
 
-  win.loadFile("index.html").catch(err => {});
-  mainWindow.webContents.openDevTools()
-};
+  return win
+}
 
 app.whenReady().then(() => {
-  createWindow();
+  ipcMain.on('set-title', handleSetTitle)
+  ipcMain.handle('dialog:openFile', handleFileOpen)
+  const mainWindow = createWindow();
+  mainWindow.webContents.openDevTools()
+
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
@@ -25,5 +42,5 @@ app.whenReady().then(() => {
 .catch(err => console.log(err));
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit();
-});
+  if (process.platform !== "darwin") app.quit()
+})
