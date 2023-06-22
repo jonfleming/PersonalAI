@@ -7,9 +7,11 @@ function handleSetTitle (event, title) {
   win.setTitle(title)
 }
 
-async function handleFileOpen () {
-  const { canceled, filePaths } = await dialog.showOpenDialog({})
+async function handleOpenFolder (event) {
+  const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openDirectory']})
   if (!canceled) {
+
+    event.reply('dialog:reply', filePaths[0])
     return filePaths[0]
   }
 }
@@ -32,11 +34,15 @@ const createWindow = () => {
 }
 
 app.whenReady().then(() => {
-  ipcMain.on('set-title', handleSetTitle)
-  ipcMain.handle('dialog:openFile', handleFileOpen)
   const mainWindow = createWindow();
   mainWindow.webContents.openDevTools()
-
+  ipcMain.on('set-title', handleSetTitle)
+  ipcMain.on('dialog:openFolder', async (event, args) => {
+    const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openDirectory']})
+    if (!canceled) {
+      mainWindow.webContents.send('dialog:reply', filePaths[0])
+    }  
+  })
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()

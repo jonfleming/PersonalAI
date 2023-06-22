@@ -1,8 +1,9 @@
 const { contextBridge, ipcRenderer } = require('electron')
 
-contextBridge.exposeInMainWorld('electronAPI', {
+contextBridge.exposeInMainWorld('api', {
   setTitle: (title) => ipcRenderer.send('set-title', title),
-  openFile: () => ipcRenderer.invoke('dialog:openFile')
+  request: (channel, data) => ipcRenderer.send(channel, data),
+  response: (channel, func) => ipcRenderer.on(channel, (event, ...args) => func(...args))
 })
 
 window.addEventListener('DOMContentLoaded', () => {
