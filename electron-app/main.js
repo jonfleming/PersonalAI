@@ -1,6 +1,43 @@
 const { app, BrowserWindow, dialog, ipcMain } = require("electron")
 const path = require('path')
 const fs = require('fs');
+const { PineconeClient } = require("@pinecone-database/pinecone");
+const { ChatOpenAI } = require("langchain/chat_models/openai")
+const { HumanChatMessage, SystemChatMessage } = require("langchain/schema")
+const { DirectoryLoader } = require("langchain/document_loaders/fs/directory");
+const { TextLoader } = require("langchain/document_loaders/fs/text");
+const { CharacterTextSplitter } = require("langchain/text_splitter");
+const { PineconeStore } = require("langchain/vectorstores/pinecone");
+const { OpenAIEmbeddings } = require("langchain/embeddings/openai");
+require("dotenv").config();
+
+const chat = new ChatOpenAI({ temperature: 0 });
+const pineconeClient = new PineconeClient();
+
+pineconeClient.init({
+  apiKey: process.env.PINECONE_API_KEY,
+  environment: process.env.PINECONE_ENVIRONMENT,
+});
+
+let vectorStore;
+
+async function indexDocuments(directoryPath) {
+  const pineconeIndex = pineconeClient.Index(process.env.PINECONE_INDEX);
+  const splitter = new CharacterTextSplitter({separator: ' ', chunkSize: 100, chunkOverlap: 3});  
+  const loader = new DirectoryLoader( directoryPath, { ".html": (dir) => new TextLoader(dir) } )
+  const docs = await loader.load()
+  const splitDocs = await splitter.splitDocuments(docs)
+
+  try {
+    await PineconeStore.fromDocuments(docs, new OpenAIEmbeddings(), {
+      pineconeIndex,
+    });    
+  } catch(error) {
+    console.log(error)
+  }
+  
+  console.log(docs)
+}
 
 function handleSetTitle(event, title) {
   const webContents = event.sender
@@ -8,8 +45,17 @@ function handleSetTitle(event, title) {
   win.setTitle(title)
 }
 
-function handleChat(prompt) {
-  return { prompt, completion: "Good question."}
+async function handleChat(prompt) {
+  const pineconeIndex = pineconeClient.Index(process.env.PINECONE_INDEX)
+  const vectorStore = await PineconeStore.fromExistingIndex(new OpenAIEmbeddings(), { pineconeIndex })
+  const matches = await vectorStore.similaritySearch(prompt, 1)
+  const context = matches[0].pageContent
+  const response = await chat.call([
+    new SystemChatMessage(`You are a helpful assistant. Use the following context to anser the User's question. Context: ${context}`),
+    new HumanChatMessage(`User: ${prompt}`)
+  ])
+
+  return { prompt, completion: response.text }
 }
 
 function getFilenames (directoryPath) {
@@ -71,11 +117,17 @@ app.whenReady().then(() => {
 
       const files = getFilenames(filePaths[0])
       mainWindow.webContents.send('dialog:filelist', files)
+      try {
+        await indexDocuments(filePaths[0])
+      } catch (error) {
+        console.log(error)
+      }
+      
     }      
   })
 
   ipcMain.on('chat:completion', async (_, prompt) => {
-    const response = handleChat(prompt)
+    const response = await handleChat(prompt)
     mainWindow.webContents.send('chat:response', response)
   })
 

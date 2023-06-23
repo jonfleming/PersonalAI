@@ -20,7 +20,7 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import SendIcon from '@mui/icons-material/Send';
 import { TextField } from "@mui/material";
 import TextareaAutosize from '@mui/base/TextareaAutosize';
-const drawerWidth = 240;
+const drawerWidth = 360;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
@@ -90,7 +90,11 @@ const TreeItems = () => {
       {
         files?.map((file, i) => <TreeItem key={file.name+i} nodeId={file.name+i} label={file.name}>
           {
-            file.children?.map((child, j) => <TreeItem key={file.name+child.name+j} nodeId={file.name+child.name+j} label={child.name}/>)
+            file.children?.map((child, j) => <TreeItem sx={{
+              "& .MuiTreeItem-label": {
+              fontSize: "12px",
+              },
+            }} key={file.name+child.name+j} nodeId={file.name+child.name+j} label={child.name}/>)
           }
         </TreeItem>)
       }
