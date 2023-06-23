@@ -1,19 +1,43 @@
 const { app, BrowserWindow, dialog, ipcMain } = require("electron")
 const path = require('path')
+const fs = require('fs');
 
-function handleSetTitle (event, title) {
+function handleSetTitle(event, title) {
   const webContents = event.sender
   const win = BrowserWindow.fromWebContents(webContents)
   win.setTitle(title)
 }
 
-async function handleOpenFolder (event) {
-  const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openDirectory']})
-  if (!canceled) {
+function handleChat(prompt) {
+  return { prompt, completion: "Good question."}
+}
 
-    event.reply('dialog:reply', filePaths[0])
-    return filePaths[0]
+function getFilenames (directoryPath) {
+  let result = [];
+
+  const items = fs.readdirSync(directoryPath);
+
+  for (let item of items) {
+      let fullPath = path.join(directoryPath, item);
+      let stat = fs.statSync(fullPath);
+
+      if (stat.isDirectory()) {
+          result.push({
+              name: item,
+              path: fullPath,
+              type: 'directory',
+              children: getFilenames(fullPath)
+          });
+      } else {
+          result.push({
+              name: item,
+              path: fullPath,
+              type: 'file'
+          });
+      }
   }
+
+  return result;
 }
 
 const createWindow = () => {
@@ -25,23 +49,34 @@ const createWindow = () => {
     }
   })
   
-  if(app.isPackaged) {
+  if(!process.defaultApp) {
+    console.log('PAI: packaged')
     win.loadFile('index.html'); // prod
   } else {
+    console.log('PAI: dev')
     win.loadURL('http://localhost:3000'); // dev
   }
+
   return win
 }
 
 app.whenReady().then(() => {
   const mainWindow = createWindow();
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
   ipcMain.on('set-title', handleSetTitle)
-  ipcMain.on('dialog:openFolder', async (event, args) => {
+  ipcMain.on('dialog:openFolder', async () => {
     const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openDirectory']})
     if (!canceled) {
       mainWindow.webContents.send('dialog:reply', filePaths[0])
-    }  
+
+      const files = getFilenames(filePaths[0])
+      mainWindow.webContents.send('dialog:filelist', files)
+    }      
+  })
+
+  ipcMain.on('chat:completion', async (_, prompt) => {
+    const response = handleChat(prompt)
+    mainWindow.webContents.send('chat:response', response)
   })
 
   app.on('activate', () => {
@@ -53,3 +88,4 @@ app.whenReady().then(() => {
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit()
 })
+
