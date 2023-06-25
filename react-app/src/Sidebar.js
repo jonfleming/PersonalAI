@@ -20,6 +20,11 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import SendIcon from '@mui/icons-material/Send';
 import { TextField } from "@mui/material";
 import TextareaAutosize from '@mui/base/TextareaAutosize';
+import FetchDialog from './FetchDialog'
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const drawerWidth = 360;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -64,7 +69,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
-  justifyContent: "flex-end",
+  justifyContent: "center",
 }));
 
 const TreeItems = () => {
@@ -73,7 +78,7 @@ const TreeItems = () => {
   useEffect(() => {
     if (window.api) {
       window.api.response('dialog:filelist', (filelist) => {
-        console.log('Reply', filelist);
+        console.log('dialog:filelist', filelist);
         setFiles(filelist);
       });  
     }
@@ -105,24 +110,30 @@ const TreeItems = () => {
 }
 
 const Conversation = () => {
-  const [lastPrompt, setLastPrompt] = React.useState('');
-  const [chatResponse, setChatResponse] = React.useState('');
+  const [conversation, setConversation] = React.useState([]);
 
   useEffect(() => {
     if (window.api) {
       window.api.response('chat:response', (response) => {
-        console.log('Reply', response);
-        setLastPrompt(response.prompt);
-        setChatResponse(response.completion);
+        console.log('chat:response', response);
+        if (!conversation.some(x => x.id === response.id)) {
+          setConversation([...conversation, response]);
+        }
       });  
     }
-  },[]);  
+  },[conversation]);  
 
-  return <>
-    <LastPrompt prompt={lastPrompt} />
-    <ChatResponse response={chatResponse} />
+  return (
+    <div>
+    { conversation.map((exchange) => (
+      <>
+        <LastPrompt key={'lp-' + exchange.id} prompt={exchange.prompt} />
+        <ChatResponse key={'cr-' + exchange.id} response={exchange.completion} />     
+      </>
+    ))}
     <Prompt />
-  </>
+    </div>
+  )
 }
 
 const LastPrompt = (props) => {
@@ -196,7 +207,7 @@ const ChatResponse = (props) => {
   `,
   );
 
-  return <StyledTextarea style={{height: '90%'}} aria-label="Response" placeholder="Response" defaultValue={props.response} disabled />;
+  return <StyledTextarea aria-label="Response" placeholder="Response" defaultValue={props.response} disabled />;
 }
 
 const Prompt = () => {
@@ -205,12 +216,12 @@ const Prompt = () => {
   const handleChange = (event) => {
     const text = event.target.value;
     setPrompt(text);
-  }
+  };
 
   const handleSubmit = () => {
     window.api.request('chat:completion', prompt);
     setPrompt('');
-  }
+  };
 
   return <>
     <TextField
@@ -230,23 +241,58 @@ const Prompt = () => {
 
 const SelectedFolder = () => {
   const [path, setPath] = React.useState('');
-
+      
   useEffect(() => { 
     if (window.api) {
       window.api.response('dialog:reply', (folderPath) => {
-        console.log('Reply', folderPath);
+        console.log('dialog:reply', folderPath);
         setPath(folderPath);
-      });  
+        window.curdir = folderPath;
+      });
+
+      window.api.response('fetch:reply', (text) => {
+        console.log('fetch:reply', text);
+        toast.success(text, {toastId: 'reply'})
+      });
+
+      window.api.response('fetch:done', (text) => {
+        console.log('fetch:done', text);
+        toast.success(text, {toastId: 'done'})
+      });
     }
   },[]);
 
-  return <label id="folder-lbl" style={{ margin: '5px 0 0 5px'}}><small>{path || 'Select a content source folder'}</small></label>;
+  return <>
+    <label id="folder-lbl" style={{ margin: '5px 0 0 5px'}}><small>{path || 'Select a content source folder'}</small></label>;
+    <ToastContainer />
+  </>
 }
 
 export default function Sidebar() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [showFetch, setShowFetch] = React.useState(false);
 
+  const showFetchDialog = () => {
+    if (!window.curdir) {
+      toast.error('Select a folder first.')
+      return;
+    }
+
+    setShowFetch(true);
+  };
+
+  const handleCancel = () => {
+    setShowFetch(false);
+  };
+
+  const handleFetch = (text) => {
+    setShowFetch(false);
+    if (window.api) {
+      window.api.request('fetch:searchTerm', {outputPath: window.curdir, searchTerm: text});
+    }
+  };
+  
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -259,7 +305,7 @@ export default function Sidebar() {
     if (window.api) {
       window.api.request('dialog:openFolder', '');
     }
-  }
+  };
 
   useEffect(() => {
     setOpen(true); 
@@ -268,7 +314,7 @@ export default function Sidebar() {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar position="fixed" open={open}>        
         <Toolbar>
           <IconButton
             color="inherit"
@@ -282,6 +328,13 @@ export default function Sidebar() {
           <Typography variant="h6" noWrap component="div">
             Personal AI
           </Typography>
+          <Box 
+            style={{marginLeft: 'auto'}} 
+            sx={{ display: { xs: 'none', sm: 'block' } }} 
+            variant="outlined"            
+          >
+            <Button id='fetch-dialog-btn' sx={{ color: '#fff' }} onClick={showFetchDialog}>Fetch More Pages</Button>
+          </Box>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -298,27 +351,29 @@ export default function Sidebar() {
         open={open}
       >
         <DrawerHeader>
-          <p>Content Sources</p>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
-          </IconButton>
+          <p style={{marginLeft: '20px'}}>Content Sources</p>
+          <span style={{marginLeft: 'auto'}}>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === "ltr" ? (
+                <ChevronLeftIcon />
+              ) : (
+                <ChevronRightIcon />
+              )}
+            </IconButton>
+          </span>
         </DrawerHeader>
         <Divider />
         <div style={{display: 'flex', justifyContent: 'center', marginTop: '5px'}}>
           <Button 
             id="folder-btn" 
             variant="contained" 
-            style={{width: '75%'}}
+            style={{width: '55%'}}
             onClick={handleSelectFolder}
             >
               Select Folder
           </Button>
         </div>
-        <SelectedFolder />        
+        <SelectedFolder />
         <Divider />
         <TreeItems />
         <Divider />
@@ -327,8 +382,9 @@ export default function Sidebar() {
       <Main open={open}>
         <DrawerHeader />
         <Typography paragraph />
-          <Conversation />            
+          <Conversation />
       </Main>
+      <FetchDialog open={showFetch} onSubmit={handleFetch} onCancel={handleCancel} />
     </Box>
   );
 }

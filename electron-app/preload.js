@@ -1,7 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron')
 
 contextBridge.exposeInMainWorld('api', {
-  setTitle: (title) => ipcRenderer.send('set-title', title),
   request: (channel, data) => ipcRenderer.send(channel, data),
   response: (channel, func) => ipcRenderer.on(channel, (event, ...args) => func(...args))
 })
