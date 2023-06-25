@@ -94,14 +94,12 @@ const savePage = async (spaceKey, outputPath, title, body) => {
 }
 
 const saveContent = async (pages, outputPath) => {
-  const content = await Promise.all(pages.map(async page => {
+  await Promise.all(pages.map(async (page, pageIndex, arr) => {
     const spaceKey = getSpaceKey(page.url)
     const response = await getPage(spaceKey, page.title)
 
-    savePage(spaceKey, outputPath, page.title, response.results[0].body.storage.value)
+    await savePage(spaceKey, outputPath, page.title, response.results[0].body.storage.value)
   }))
-
-  return content  
 }
 
 async function indexPage(filename) {
@@ -152,12 +150,12 @@ async function handleFetch(mainWindow, outputPath, searchTerm) {
 
   const pages = await getPages(searchTerm)
   mainWindow.webContents.send('fetch:reply', `Fetched ${pages.length} pages`)
-  saveContent(pages, outputPath).then(()=>{
-    mainWindow.webContents.send('fetch:done', 'Done')
-
-    const files = getFilenames(outputPath)
-    mainWindow.webContents.send('dialog:filelist', files)
-  })
+  try {
+    await saveContent(pages, outputPath)
+    mainWindow.webContents.send('fetch:done', 'Indexing')  
+  } catch(err) {
+    console.log(err)
+  }
 }
 
 function getFilenames (directoryPath) {

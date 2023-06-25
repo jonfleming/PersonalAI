@@ -91,9 +91,9 @@ app.whenReady().then(() => {
   })
 
   ipcMain.on('fetch:searchTerm', async (_, {outputPath, searchTerm}) => {
-    indexer.handleFetch(mainWindow, outputPath, searchTerm).then(() => {
-      mainWindow.webContents.send('fetch:done', 'Complete')
-    })    
+    await indexer.handleFetch(mainWindow, outputPath, searchTerm)
+    const files = indexer.getFilenames(outputPath)
+    mainWindow.webContents.send('dialog:filelist', files)
   })
 
   app.on('activate', () => {

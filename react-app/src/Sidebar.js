@@ -220,6 +220,7 @@ const Prompt = () => {
 
   const handleSubmit = () => {
     window.api.request('chat:completion', prompt);
+    toast.info('Processing...')
     setPrompt('');
   };
 
