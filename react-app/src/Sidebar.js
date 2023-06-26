@@ -10,10 +10,12 @@ import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
+import FolderIcon from '@mui/icons-material/Folder';
 import TreeView from '@mui/lab/TreeView';
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import SearchIcon from '@mui/icons-material/Search';
 import TreeItem from '@mui/lab/TreeItem';import Button from '@mui/material/Button';
 import PersonIcon from '@mui/icons-material/Person';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
@@ -25,7 +27,7 @@ import FetchDialog from './FetchDialog'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const drawerWidth = 360;
+let drawerWidth = 360;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
@@ -69,7 +71,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
-  justifyContent: "center",
+  justifyContent: "left",
 }));
 
 const TreeItems = () => {
@@ -242,9 +244,11 @@ const Prompt = () => {
 
 const SelectedFolder = () => {
   const [path, setPath] = React.useState('');
-      
-  useEffect(() => { 
+
+  useEffect(() => {
     if (window.api) {
+      window.api.request('init:filelist', '');
+      
       window.api.response('dialog:reply', (folderPath) => {
         console.log('dialog:reply', folderPath);
         setPath(folderPath);
@@ -264,7 +268,17 @@ const SelectedFolder = () => {
   },[]);
 
   return <>
-    <label id="folder-lbl" style={{ margin: '5px 0 0 5px'}}><small>{path || 'Select a content source folder'}</small></label>;
+    <label
+      id="folder-lbl" 
+      style={{height: '25px', 
+      width: '90%', 
+      backgroundColor: 'white', 
+      color: 'black', 
+      padding: '2px',
+      margin: '0',
+      overflowY: 'hidden'
+      }}>
+      {path || 'Select a content source folder'}</label>
     <ToastContainer />
   </>
 }
@@ -309,7 +323,7 @@ export default function Sidebar() {
   };
 
   useEffect(() => {
-    setOpen(true); 
+    setOpen(true);
   },[]);
 
   return (
@@ -326,19 +340,18 @@ export default function Sidebar() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Personal AI
-          </Typography>
+          <SelectedFolder />
           <Box 
             style={{marginLeft: 'auto'}} 
             sx={{ display: { xs: 'none', sm: 'block' } }} 
             variant="outlined"            
           >
-            <Button id='fetch-dialog-btn' sx={{ color: '#fff' }} onClick={showFetchDialog}>Fetch More Pages</Button>
+            <Button id='fetch-dialog-btn' sx={{ color: '#fff' }} onClick={showFetchDialog}><SearchIcon /></Button>
           </Box>
         </Toolbar>
       </AppBar>
       <Drawer
+        id="drawer"
         sx={{
           width: drawerWidth,
           flexShrink: 0,
@@ -352,8 +365,9 @@ export default function Sidebar() {
         open={open}
       >
         <DrawerHeader>
-          <p style={{marginLeft: '20px'}}>Content Sources</p>
+          <p style={{marginLeft: '20px'}}>Content Source</p>
           <span style={{marginLeft: 'auto'}}>
+            <IconButton onClick={handleSelectFolder}><FolderIcon /></IconButton>
             <IconButton onClick={handleDrawerClose}>
               {theme.direction === "ltr" ? (
                 <ChevronLeftIcon />
@@ -364,21 +378,7 @@ export default function Sidebar() {
           </span>
         </DrawerHeader>
         <Divider />
-        <div style={{display: 'flex', justifyContent: 'center', marginTop: '5px'}}>
-          <Button 
-            id="folder-btn" 
-            variant="contained" 
-            style={{width: '55%'}}
-            onClick={handleSelectFolder}
-            >
-              Select Folder
-          </Button>
-        </div>
-        <SelectedFolder />
-        <Divider />
         <TreeItems />
-        <Divider />
- 
       </Drawer>
       <Main open={open}>
         <DrawerHeader />

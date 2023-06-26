@@ -1,6 +1,7 @@
-const { app, BrowserWindow, dialog, ipcMain } = require("electron")
+const { app, BrowserWindow, dialog, ipcMain, Menu } = require("electron")
 const path = require('path')
 const fs = require('fs');
+const ini = require('ini')
 const { PineconeClient } = require("@pinecone-database/pinecone")
 const { ChatOpenAI } = require("langchain/chat_models/openai")
 const { HumanChatMessage, SystemChatMessage } = require("langchain/schema")
@@ -14,35 +15,56 @@ const indexer = require('./confluence-indexer')
 
 require("dotenv").config()
 
+const config = ini.parse(fs.readFileSync('./config.ini', 'utf-8'))
 const chat = new ChatOpenAI({ temperature: 0 })
 const pineconeClient = new PineconeClient()
+const maxTokens = 2048
+
+let sessionId = config.sessionId //`${Date.now()}`
+let pineconeIndex = null
 let requestId = 0
 
 pineconeClient.init({
   apiKey: process.env.PINECONE_API_KEY,
   environment: process.env.PINECONE_ENVIRONMENT,
-});
+}).then(() => {
+  pineconeIndex = pineconeClient.Index(process.env.PINECONE_INDEX)
+})
 
-async function indexPage(directoryPath) {
-  const splitter = new CharacterTextSplitter({separator: ' ', chunkSize: 100, chunkOverlap: 3})
-  const loader = new DirectoryLoader( directoryPath, { ".txt": (dir) => new TextLoader(dir) } )
-  const docs = await loader.load()
-  const splitDocs = await splitter.splitDocuments(docs)
+if (!fs.existsSync(config.currentDir)) {
+  fs.mkdirSync(config.currentDir)
+}
 
-  try {
-    vectorStore = await MemoryVectorStore.fromDocuments(splitDocs, new OpenAIEmbeddings())
-  } catch(error) {
-    console.log(error)
+function saveConfig(currentDir) {
+  const indexFile = path.join(currentDir, 'index.ini')
+  let retval = false
+  
+  if (fs.existsSync(indexFile)) {
+    const index = ini.parse(fs.readFileSync(indexFile, 'utf-8'))
+    sessionId = index.sessionId
+  } else {
+    sessionId = `${Date.now()}`
+    const index = {
+      sessionId
+    }
+
+    fs.writeFileSync(indexFile, ini.stringify(index))
+    retval = true
   }
   
-  console.log(docs)
+  config.currentDir = currentDir
+  config.sessionId = sessionId
+
+  fs.writeFileSync('./config.ini', ini.stringify(config))
+
+  return retval
 }
 
 async function handleChat(prompt) {
-  const pineconeIndex = pineconeClient.Index(process.env.PINECONE_INDEX)
   const vectorStore = await PineconeStore.fromExistingIndex(new OpenAIEmbeddings(), { pineconeIndex })
-  const matches = await vectorStore.similaritySearch(prompt, 10)
+  const matches = await vectorStore.similaritySearch(prompt, 20, { sessionId })
   const context = matches.map(x => x.pageContent).join(' ')
+
   const response = await chat.call([
     new SystemChatMessage(`You are a helpful assistant. Use the following context to anser the User's question. Context: ${context}`),
     new HumanChatMessage(`User: ${prompt}`)
@@ -53,6 +75,7 @@ async function handleChat(prompt) {
 
 const createWindow = () => {
   const win = new BrowserWindow({
+    minWidth: 800,
     width: 800,
     height: 600,
     webPreferences: {
@@ -68,19 +91,34 @@ const createWindow = () => {
     win.loadURL('http://localhost:3000'); // dev
   }
 
+  const menu = Menu.buildFromTemplate([])
+  // Menu.setApplicationMenu(menu)
+
   return win
 }
 
 app.whenReady().then(() => {
   const mainWindow = createWindow();
   // mainWindow.webContents.openDevTools()
+
+  ipcMain.on('init:filelist', async (_, prompt) => {
+    console.log(`Sending filelist: ${config.currentDir}`)
+    const files = indexer.getFilenames(config.currentDir)
+    mainWindow.webContents.send('dialog:reply', config.currentDir)
+    mainWindow.webContents.send('dialog:filelist', files)
+  })
+
   ipcMain.on('dialog:openFolder', async () => {
     const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openDirectory']})
     if (!canceled) {
-      mainWindow.webContents.send('dialog:reply', filePaths[0])
 
-      const files = indexer.getFilenames(filePaths[0])
-      mainWindow.webContents.send('dialog:filelist', files)
+      const needsIndexing = saveConfig(filePaths[0])
+      mainWindow.webContents.send('dialog:reply', config.currentDir)
+
+      if (needsIndexing) {
+        const files = indexer.getFilenames(config.currentDir)
+        mainWindow.webContents.send('dialog:filelist', files)  
+      }
     }      
   })
 
@@ -91,7 +129,8 @@ app.whenReady().then(() => {
   })
 
   ipcMain.on('fetch:searchTerm', async (_, {outputPath, searchTerm}) => {
-    await indexer.handleFetch(mainWindow, outputPath, searchTerm)
+    
+    await indexer.handleFetch(mainWindow, outputPath, searchTerm, sessionId)
     const files = indexer.getFilenames(outputPath)
     mainWindow.webContents.send('dialog:filelist', files)
   })

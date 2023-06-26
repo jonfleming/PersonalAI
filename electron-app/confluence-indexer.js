@@ -1,45 +1,54 @@
-const axios = require('axios')
-const path = require('path')
-const fs = require('fs')
-const { PineconeClient } = require("@pinecone-database/pinecone");
-const { DirectoryLoader } = require("langchain/document_loaders/fs/directory");
-const { TextLoader } = require("langchain/document_loaders/fs/text");
-const { CharacterTextSplitter } = require("langchain/text_splitter");
-const { PineconeStore } = require("langchain/vectorstores/pinecone");
-const { OpenAIEmbeddings } = require("langchain/embeddings/openai");
-const { convert } = require('html-to-text');
+const axios = require("axios")
+const path = require("path")
+const fs = require("fs")
+const { PineconeClient } = require("@pinecone-database/pinecone")
+const { DirectoryLoader } = require("langchain/document_loaders/fs/directory")
+const { TextLoader } = require("langchain/document_loaders/fs/text")
+const { CharacterTextSplitter } = require("langchain/text_splitter")
+const { PineconeStore } = require("langchain/vectorstores/pinecone")
+const { OpenAIEmbeddings } = require("langchain/embeddings/openai")
+const { convert } = require("html-to-text")
+const fileExtensions = [".txt", ".xslx", ".docx", ".pdf", ".json", ".csv"]
 
-require("dotenv").config();
+require("dotenv").config()
 
-const email = 'jon.fleming@mcg.com'
+const email = "jon.fleming@mcg.com"
 const apiToken = process.env.JIRA_TOKEN
-const base64EncodedCredentials = btoa(email + ':' + apiToken)
-const baseUrl = 'https://mcghealth.atlassian.net/wiki'
-const splitter = new CharacterTextSplitter({separator: ' ', chunkSize: 100, chunkOverlap: 3})
+const base64EncodedCredentials = btoa(email + ":" + apiToken)
+const baseUrl = "https://mcghealth.atlassian.net/wiki"
+const splitter = new CharacterTextSplitter({
+  separator: " ",
+  chunkSize: 100,
+  chunkOverlap: 3,
+})
 const htmlOptions = {
   wordwrap: 130,
-};
+}
 
 const spaces = {}
-let pineconeIndex = null;
+let pineconeIndex = null
 
 const options = {
-  headers: { 
+  headers: {
     Authorization: `Basic ${base64EncodedCredentials}`,
-    Accept: 'application/json'
-  }
+    Accept: "application/json",
+  },
 }
 
 const request = async (url) => {
   const response = await axios.get(url, options)
-  console.log('Request:', url)
-  
+  console.log("Request:", url)
+
   return response.data
 }
 
 const getPage = async (spaceKey, title) => {
-  const queryString = `spaceKey=${encodeURIComponent(spaceKey)}&title=${encodeURIComponent(title)}`  
-  const response = await request(`${baseUrl}/rest/api/content?${queryString}&expand=body.storage`)
+  const queryString = `spaceKey=${encodeURIComponent(
+    spaceKey
+  )}&title=${encodeURIComponent(title)}`
+  const response = await request(
+    `${baseUrl}/rest/api/content?${queryString}&expand=body.storage`
+  )
 
   return response
 }
@@ -51,22 +60,29 @@ const getSpace = async (spaceKey) => {
 }
 
 const getSpaceKey = (url) => {
-  const spaceKey = url.split('/')[2]
+  const spaceKey = url.split("/")[2]
 
   return spaceKey
 }
 
 const getPages = async (title) => {
   const queryString = `type="page" and title~"*${title}*"&includeArchivedSpaces=false&limit=20`
-  const response = await request(`${baseUrl}/rest/api/search?cql=${queryString}`)
-  const pages = await response.results.map(page => {
-    return { id: page.content.id, title: page.content.title, url: page.url, space: page.space }
+  const response = await request(
+    `${baseUrl}/rest/api/search?cql=${queryString}`
+  )
+  const pages = await response.results.map((page) => {
+    return {
+      id: page.content.id,
+      title: page.content.title,
+      url: page.url,
+      space: page.space,
+    }
   })
 
   return pages
 }
 
-const savePage = async (spaceKey, outputPath, title, body) => {
+const savePage = async (spaceKey, outputPath, title, body, sessionId) => {
   if (!spaces[spaceKey]) {
     const response = await getSpace(spaceKey)
     spaces[spaceKey] = response
@@ -82,108 +98,121 @@ const savePage = async (spaceKey, outputPath, title, body) => {
   }
 
   const text = convert(body, htmlOptions)
-  let filename = `${title.replace(/\//g, ' - ').replace(/</g, '(').replace(/>/g, ')')}.txt`
+  let filename = `${title
+    .replace(/\//g, " - ")
+    .replace(/</g, "(")
+    .replace(/>/g, ")")}.txt`
   filename = path.join(directory, filename)
 
   if (!fs.existsSync(filename)) {
     fs.writeFileSync(filename, text)
-    await indexPage(filename)
+    await indexPage(filename, sessionId)
   }
 
   console.log(`Page: ${spaceKey}/${title}`)
 }
 
-const saveContent = async (pages, outputPath) => {
-  await Promise.all(pages.map(async (page, pageIndex, arr) => {
-    const spaceKey = getSpaceKey(page.url)
-    const response = await getPage(spaceKey, page.title)
+const saveContent = async (pages, outputPath, sessionId) => {
+  await Promise.all(
+    pages.map(async (page, pageIndex, arr) => {
+      const spaceKey = getSpaceKey(page.url)
+      const response = await getPage(spaceKey, page.title)
 
-    await savePage(spaceKey, outputPath, page.title, response.results[0].body.storage.value)
-  }))
+      await savePage(
+        spaceKey,
+        outputPath,
+        page.title,
+        response.results[0].body.storage.value,
+        sessionId
+      )
+    })
+  )
 }
 
-async function indexPage(filename) {
+async function indexPage(filename, sessionId) {
   const loader = new TextLoader(filename)
   const docs = await loader.load()
   const splitDocs = await splitter.splitDocuments(docs)
 
+  splitDocs.forEach((doc) => (doc.metadata.sessionId = sessionId))
+
   try {
     await PineconeStore.fromDocuments(splitDocs, new OpenAIEmbeddings(), {
       pineconeIndex,
-    });    
-  } catch(error) {
+    })
+  } catch (error) {
     console.log(error)
   }
-  
-  console.log('indexed ', filename)
+
+  console.log("indexed ", filename)
 }
 
-async function indexDirectory(directoryPath) {  
-  const loader = new DirectoryLoader( directoryPath, { ".txt": (dir) => new TextLoader(dir) } )
+async function indexDirectory(directoryPath) {
+  const loader = new DirectoryLoader(directoryPath, {
+    ".txt": (dir) => new TextLoader(dir),
+  })
   const docs = await loader.load()
   const splitDocs = await splitter.splitDocuments(docs)
 
   try {
     await PineconeStore.fromDocuments(splitDocs, new OpenAIEmbeddings(), {
       pineconeIndex,
-    });    
-  } catch(error) {
+    })
+  } catch (error) {
     console.log(error)
   }
-  
-  console.log('indexed ', directoryPath)
+
+  console.log("indexed ", directoryPath)
 }
 
-async function handleFetch(mainWindow, outputPath, searchTerm) {
+async function handleFetch(mainWindow, outputPath, searchTerm, sessionId) {
   const pineconeClient = new PineconeClient()
 
   await pineconeClient.init({
     apiKey: process.env.PINECONE_API_KEY,
     environment: process.env.PINECONE_ENVIRONMENT,
-  });
+  })
 
   pineconeIndex = pineconeClient.Index(process.env.PINECONE_INDEX)
-   
-  console.log('Output Path:', outputPath)
-  console.log('Search Term:', searchTerm)
-  console.log('Starting fetch...')
+
+  console.log("Output Path:", outputPath)
+  console.log("Search Term:", searchTerm)
+  console.log("Starting fetch...")
 
   const pages = await getPages(searchTerm)
-  mainWindow.webContents.send('fetch:reply', `Fetched ${pages.length} pages`)
+  mainWindow.webContents.send("fetch:reply", `Fetching ${pages.length} pages`)
   try {
-    await saveContent(pages, outputPath)
-    mainWindow.webContents.send('fetch:done', 'Indexing')  
-  } catch(err) {
+    await saveContent(pages, outputPath, sessionId)
+    mainWindow.webContents.send("fetch:done", "Indexing")
+  } catch (err) {
     console.log(err)
   }
 }
 
-function getFilenames (directoryPath) {
-  let result = [];
+function getFilenames(directoryPath) {
+  let result = []
 
-  const items = fs.readdirSync(directoryPath);
+  const items = fs.readdirSync(directoryPath)
 
   for (let item of items) {
-      let fullPath = path.join(directoryPath, item);
-      let stat = fs.statSync(fullPath);
+    let fullPath = path.join(directoryPath, item)
+    let stat = fs.statSync(fullPath)
 
-      if (stat.isDirectory()) {
-          result.push({
-              name: item,
-              path: fullPath,
-              type: 'directory',
-              children: getFilenames(fullPath)
-          });
-      } else {
-          result.push({
-              name: item,
-              path: fullPath,
-              type: 'file'
-          });
-      }
+    if (stat.isDirectory()) {
+      result.push({
+        name: item,
+        path: fullPath,
+        type: "directory",
+        children: getFilenames(fullPath),
+      })
+    } else {
+      fileExtensions.includes(path.extname(item).toLowerCase())
+        ? result.push({ name: item, path: fullPath, type: "file" })
+        : null
+    }
   }
 
-  return result;
+  return result
 }
 
 module.exports = { handleFetch, getFilenames }
