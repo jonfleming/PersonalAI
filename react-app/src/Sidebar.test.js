@@ -18,6 +18,6 @@ export default ResizeObserver;
 
 test('renders Personal AI heading', () => {
   render(<Sidebar />);
-  const linkElement = screen.getByText(/Content Sources/i);
-  expect(linkElement).toBeInTheDocument();
+  const linkElement = screen.getAllByText(/Content Source/i);
+  expect(linkElement.length).toBe(2)
 });
