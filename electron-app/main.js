@@ -109,7 +109,7 @@ app.whenReady().then(() => {
       const files = indexer.getFilenames(config.currentDir)
       mainWindow.webContents.send('dialog:filelist', files)  
 
-      if (needsIndexing(currentDir)) {
+      if (needsIndexing(config.currentDir)) {
         indexer.indexDirectory(config.currentDir)
       }
     }      
