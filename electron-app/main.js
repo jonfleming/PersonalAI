@@ -4,17 +4,26 @@ const fs = require('fs');
 const ini = require('ini')
 const indexer = require('./confluence-indexer')
 const azure = require('./azure-rest-api')
-
+const settings = require('./settings')
 require("dotenv").config()
 
-const config = ini.parse(fs.readFileSync('./config.ini', 'utf-8'))
 const maxTokens = 2048
 
-let sessionId = config.sessionId //`${Date.now()}`
 let requestId = 0
+let currentDir = './index'
+let sessionId = `${Date.now()}`
+let config = { currentDir, sessionId }
 
-if (!fs.existsSync(config.currentDir)) {
-  fs.mkdirSync(config.currentDir)
+if (fs.existsSync('./config.ini')) {
+  config = ini.parse(fs.readFileSync('./config.ini', 'utf-8'))
+  currentDir = config.currentDir
+  sessionId = config.sessionId
+} else {
+  fs.writeFileSync('./config.ini', ini.stringify(config))
+}
+
+if (!fs.existsSync(currentDir)) {
+  fs.mkdirSync(currentDir)
 }
 
 function needsIndexing(currentDir) {

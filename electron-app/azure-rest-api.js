@@ -3,10 +3,7 @@ const fetch = require('node-fetch')
 const path = require('path')
 const fs = require('fs');
 const ini = require('ini')
-
-const config = ini.parse(fs.readFileSync('./config.ini', 'utf-8'))
-const completionUrl = config.completionUrl
-const embeddingsUrl = config.embeddingsUrl
+const settings = require('./settings')
 
 let bearerToken = null
 
@@ -30,7 +27,7 @@ function azureEmbeddings() {
   }
 
   const embedQuery = async (document) => {
-    const response = await fetch(embeddingsUrl, {
+    const response = await fetch(settings.embeddingsUrl, {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify({input: document}),
@@ -53,7 +50,7 @@ function getHeaders() {
   }
 }
 async function chatCompletion(data) { 
-  const response = await fetch(completionUrl, {
+  const response = await fetch(settings.completionUrl, {
     method: 'POST',
     headers: getHeaders(),
     body: JSON.stringify(data),
