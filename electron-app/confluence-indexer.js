@@ -237,11 +237,14 @@ function LoadIndex(directoryPath) {
   console.log("Loading index...", directoryPath)
   const indexFile = path.join(directoryPath, "index.json")
 
-  if (vectorStore && fs.existsSync(indexFile)) {
+  if (!vectorStore) {
+    createIndex()
+  }
+  if (fs.existsSync(indexFile)) {
     const json = fs.readFileSync(path.join(directoryPath, "index.json"), "utf8")
     vectorStore.memoryVectors = JSON.parse(json)
   } else {
-    createIndex() 
+    indexDirectory(directoryPath)
   }
 }
 
