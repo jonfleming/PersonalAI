@@ -24,6 +24,8 @@
     "electron": "^25.2.0"
   },
   "dependencies": {
+    "@azure/identity": "^3.2.3",
+    "@azure/openai": "^1.0.0-beta.2",
     "@pinecone-database/pinecone": "^0.1.6",
     "dotenv": "^16.3.1",
     "electron-squirrel-startup": "^1.0.0",
