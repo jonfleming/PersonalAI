@@ -161,7 +161,7 @@ async function similaritySearch(prompt, sessionId) {
 }
 
 async function indexDirectory(directoryPath) {
-  if (!vectorStore || !fs.existsSync(indexFile)) {
+  if (!vectorStore) {
     createIndex()
   }
   
