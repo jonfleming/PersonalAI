@@ -2,29 +2,15 @@ const { app, BrowserWindow, dialog, ipcMain, Menu } = require("electron")
 const path = require('path')
 const fs = require('fs');
 const ini = require('ini')
-const indexer = require('./confluence-indexer')
-const azure = require('./azure-rest-api')
-const settings = require('./settings')
+const indexer = require('./indexer')
+const azure = require('./azure-rest-api');
+const { create } = require("domain");
 require("dotenv").config()
-
-const maxTokens = 2048
 
 let requestId = 0
 let currentDir = './index'
 let sessionId = `${Date.now()}`
 let config = { currentDir, sessionId }
-
-if (fs.existsSync('./config.ini')) {
-  config = ini.parse(fs.readFileSync('./config.ini', 'utf-8'))
-  currentDir = config.currentDir
-  sessionId = config.sessionId
-} else {
-  fs.writeFileSync('./config.ini', ini.stringify(config))
-}
-
-if (!fs.existsSync(currentDir)) {
-  fs.mkdirSync(currentDir)
-}
 
 function needsIndexing(currentDir) {
   const indexFile = path.join(currentDir, 'index.json')
@@ -56,6 +42,10 @@ function saveConfig(currentDir) {
 }
 
 async function handleChat(prompt) {
+  if (prompt === 'test') {
+    indexer.text()
+    return
+  }
   const matches = await indexer.similaritySearch(prompt, sessionId)
   const context = matches.map(x => x.pageContent).join(' ')
 
@@ -95,12 +85,11 @@ const createWindow = () => {
   return win
 }
 
-
-app.whenReady().then(() => {
+function openWindow() {
   const mainWindow = createWindow();
   // mainWindow.webContents.openDevTools()
 
-  ipcMain.on('init:filelist', async (_, prompt) => {
+  ipcMain.on('init:filelist', async () => {
     console.log(`Sending filelist: ${config.currentDir}`)
     const files = indexer.getFilenames(config.currentDir)
     mainWindow.webContents.send('dialog:reply', config.currentDir)
@@ -139,7 +128,11 @@ app.whenReady().then(() => {
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
-  })  
+  }) 
+}
+
+app.whenReady().then(() => {
+  main()
 })
 .catch(err => console.log(err));
 
@@ -147,4 +140,22 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit()
 })
 
-azure.getAccessToken()
+async function main() {
+  if (fs.existsSync('./config.ini')) {
+    config = ini.parse(fs.readFileSync('./config.ini', 'utf-8'))
+    currentDir = config.currentDir
+    sessionId = config.sessionId
+  
+    const {accessToken, expiresOn} = await azure.getAccessToken(config)
+    config.accessToken = accessToken
+    config.expiresOn = expiresOn
+    fs.writeFileSync('./config.ini', ini.stringify(config))
+  }
+  
+  if (!fs.existsSync(currentDir)) {
+    fs.mkdirSync(currentDir)
+  }
+
+
+  openWindow()
+}

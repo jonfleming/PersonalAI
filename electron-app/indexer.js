@@ -8,6 +8,7 @@ const { PDFLoader } = require("langchain/document_loaders/fs/pdf")
 const { DocxLoader } = require("langchain/document_loaders/fs/docx")
 const { CharacterTextSplitter } = require("langchain/text_splitter")
 const { OpenAIEmbeddings } = require("langchain/embeddings/openai")
+const { AzureEmbeddings } = require("./embeddings")
 const { MemoryVectorStore } = require("langchain/vectorstores/memory")
 const { convert } = require("html-to-text")
 const azure = require("./azure-rest-api")
@@ -15,12 +16,7 @@ const fileExtensions = [".txt", ".xslx", ".docx", ".pdf", ".csv"]
 
 require("dotenv").config()
 
-const email = "jon.fleming@mcg.com"
-const apiToken = process.env.JIRA_TOKEN
-const base64EncodedCredentials = btoa(email + ":" + apiToken)
-const baseUrl = "https://mcghealth.atlassian.net/wiki"
 const spaces = {}
-
 let vectorStore = null
 
 const splitter = new CharacterTextSplitter({
@@ -36,7 +32,7 @@ const htmlOptions = {
 const options = {
   method: "GET",
   headers: {
-    Authorization: `Basic ${base64EncodedCredentials}`,
+    Authorization: `Basic ${process.env.CONFLUENCE_AUTH}`,
     Accept: "application/json",
   },
 }
@@ -54,14 +50,14 @@ const getPage = async (spaceKey, title) => {
     spaceKey
   )}&title=${encodeURIComponent(title)}`
   const response = await request(
-    `${baseUrl}/rest/api/content?${queryString}&expand=body.storage`
+    `${process.env.CONFLUENCE_URL}/rest/api/content?${queryString}&expand=body.storage`
   )
 
   return response
 }
 
 const getSpace = async (spaceKey) => {
-  const response = await request(`${baseUrl}/rest/api/space/${spaceKey}`)
+  const response = await request(`${process.env.CONFLUENCE_URL}/rest/api/space/${spaceKey}`)
 
   return response.name
 }
@@ -75,7 +71,7 @@ const getSpaceKey = (url) => {
 const getPages = async (title) => {
   const queryString = `type="page" and title~"*${title}*"&includeArchivedSpaces=false&limit=20`
   const response = await request(
-    `${baseUrl}/rest/api/search?cql=${queryString}`
+    `${process.env.CONFLUENCE_URL}/rest/api/search?cql=${queryString}`
   )
   const pages = await response.results.map((page) => {
     return {
@@ -90,6 +86,7 @@ const getPages = async (title) => {
 }
 
 const savePage = async (spaceKey, outputPath, title, body, sessionId) => {
+  console.log('saving ', title)
   if (!spaces[spaceKey]) {
     const response = await getSpace(spaceKey)
     spaces[spaceKey] = response
@@ -166,10 +163,11 @@ async function indexDirectory(directoryPath) {
   }
   
   const loader = new DirectoryLoader(directoryPath, {
-    ".txt": (dir) => new TextLoader(dir),
+    ".txt": (path) => new TextLoader(path),
     ".csv": (path) => new CSVLoader(path, "text"),
     ".pdf": (path) => new PDFLoader(path),
     ".docx": (path) => new DocxLoader(path),
+    ".ini": (path) => new TextLoader(path),
   })
 
   const docs = await loader.load()
@@ -228,7 +226,7 @@ function getFilenames(directoryPath) {
 }
 
 function createIndex() {
-  //const embeddings = azure.azureEmbeddings()
+  // const embeddings = new AzureEmbeddings()
   const embeddings = new OpenAIEmbeddings()
   vectorStore = new MemoryVectorStore(embeddings)
 }
@@ -255,6 +253,10 @@ function SaveIndex(directoryPath) {
   fs.writeFileSync(indexFile, json)
 }
 
+function test() {
+  const response = azure.getEmbeddings("Hello World")
+}
+
 module.exports = {
   handleFetch,
   getFilenames,
@@ -263,4 +265,5 @@ module.exports = {
   LoadIndex,
   SaveIndex,
   indexDirectory,
+  test,
 }
