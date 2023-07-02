@@ -35,10 +35,12 @@ const htmlOptions = {
   wordwrap: 130,
 }
 
+const confluenceAuth = btoa(`${process.env.CONFLUENCE_USER}:${process.env.CONFLUENCE_TOKEN}`)
+
 const options = {
   method: "GET",
   headers: {
-    Authorization: `Basic ${process.env.CONFLUENCE_AUTH}`,
+    Authorization: `Basic ${confluenceAuth}`,
     Accept: "application/json",
   },
 }
