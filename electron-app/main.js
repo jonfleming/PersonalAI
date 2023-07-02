@@ -80,7 +80,7 @@ const createWindow = () => {
   }
 
   const menu = Menu.buildFromTemplate([])
-  // Menu.setApplicationMenu(menu)
+  Menu.setApplicationMenu(menu)
 
   return win
 }
