@@ -15,7 +15,7 @@ const azure = require("./azure-rest-api")
 const fileExtensions = [".txt", ".xslx", ".docx", ".pdf", ".csv"]
 
 require('dotenv').config({
-  path: app.isPackaged
+  path: process.defaultApp
       ? path.join(process.resourcesPath, '.env')
       : path.resolve(process.cwd(), '.env'),
 })
