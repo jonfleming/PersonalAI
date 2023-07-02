@@ -1,8 +1,6 @@
 const spawn = require('child_process').spawn
 const fetch = require('node-fetch')
-const path = require('path')
-const fs = require('fs');
-const ini = require('ini')
+const log = require('electron-log');
 const settings = require('./azure-settings')
 
 let accessToken = null
@@ -12,8 +10,8 @@ async function getAccessToken(config) {
   if (new Date(config.expiresOn) > new Date()) {
     accessToken = config.accessToken
     expiresOn = config.expiresOn
-    console.log('Using cached token')
-    
+    log.info('Using cached token')
+
     return { accessToken, expiresOn }  
   }
 
@@ -30,13 +28,14 @@ function exec(cmd, params) {
     const childProcess = spawn(cmd, params)
 
     childProcess.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`) 
+      log.info(`stdout: ${data}`) 
       spawn('az.cmd', ['account', 'set', '--subscription', '45ee5d37-dd7d-42dc-84d7-5c2c4aba7e1a'])  
       resolve(data)
     })
 
     childProcess.on('error', (error) => {
-      reject(error);
+      log.error(error)
+      reject(error)
     });
   })  
 }
@@ -58,7 +57,7 @@ async function chatCompletion(data) {
   })
   
   const json = await response.json();
-  console.log(json);
+  log.info(json);
 
   return json.choices[0].message.content
 }
@@ -72,7 +71,7 @@ async function getEmbeddings(data) {
   })
   
   const json = await response.json();
-  console.log(json);
+  log.info(json);
 
   return json.data[0].embeddings
 }

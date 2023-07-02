@@ -4,7 +4,8 @@ const fs = require('fs');
 const ini = require('ini')
 const indexer = require('./indexer')
 const azure = require('./azure-rest-api');
-const { create } = require("domain");
+const log = require('electron-log');
+
 require("dotenv").config()
 
 let requestId = 0
@@ -72,10 +73,10 @@ const createWindow = () => {
   })
   
   if(!process.defaultApp) {
-    console.log('PAI: packaged')
+    log.info('PAI: packaged')
     win.loadFile('index.html'); // prod
   } else {
-    console.log('PAI: dev')
+    log.info('PAI: dev')
     win.loadURL('http://localhost:3000'); // dev
   }
 
@@ -90,7 +91,7 @@ function openWindow() {
   // mainWindow.webContents.openDevTools()
 
   ipcMain.on('init:filelist', async () => {
-    console.log(`Sending filelist: ${config.currentDir}`)
+    log.info(`Sending filelist: ${config.currentDir}`)
     const files = indexer.getFilenames(config.currentDir)
     mainWindow.webContents.send('dialog:reply', config.currentDir)
     mainWindow.webContents.send('dialog:filelist', files)
@@ -134,7 +135,7 @@ function openWindow() {
 app.whenReady().then(() => {
   main()
 })
-.catch(err => console.log(err));
+.catch(err => log.error(err));
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit()

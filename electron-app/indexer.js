@@ -11,11 +11,12 @@ const { OpenAIEmbeddings } = require("langchain/embeddings/openai")
 const { AzureEmbeddings } = require("./embeddings")
 const { MemoryVectorStore } = require("langchain/vectorstores/memory")
 const { convert } = require("html-to-text")
+const log = require('electron-log');
 const azure = require("./azure-rest-api")
-const fileExtensions = [".txt", ".xslx", ".docx", ".pdf", ".csv"]
 
 require('dotenv').config()
 
+const fileExtensions = [".txt", ".xslx", ".docx", ".pdf", ".csv"]
 const spaces = {}
 let vectorStore = null
 
@@ -39,7 +40,7 @@ const options = {
 
 const request = async (url) => {
   const response = await fetch(url, options)
-  console.log("Request:", url)
+  log.info("Request:", url)
   const json = await response.json()
 
   return json
@@ -86,7 +87,7 @@ const getPages = async (title) => {
 }
 
 const savePage = async (spaceKey, outputPath, title, body, sessionId) => {
-  console.log('saving ', title)
+  log.info('saving ', title)
   if (!spaces[spaceKey]) {
     const response = await getSpace(spaceKey)
     spaces[spaceKey] = response
@@ -113,7 +114,7 @@ const savePage = async (spaceKey, outputPath, title, body, sessionId) => {
     await indexPage(filename, sessionId)
   }
 
-  console.log(`Page: ${spaceKey}/${title}`)
+  log.info(`Page: ${spaceKey}/${title}`)
 }
 
 const saveContent = async (pages, outputPath, sessionId) => {
@@ -143,16 +144,16 @@ async function indexPage(filename, sessionId) {
   try {
     await vectorStore.addDocuments(splitDocs)
   } catch (error) {
-    console.log(error)
+    log.error(error)
   }
 
-  console.log("indexed ", filename)
+  log.info("indexed ", filename)
 }
 
 async function similaritySearch(prompt, sessionId) {
   const filter = (doc) => doc.metadata.sessionId === sessionId
   const result = await vectorStore.similaritySearch(prompt, 20, filter)
-  console.log(result)
+  log.info(result)
 
   return result
 }
@@ -178,17 +179,17 @@ async function indexDirectory(directoryPath, sessionId) {
   try {
     await vectorStore.addDocuments(splitDocs)
   } catch (error) {
-    console.log(error)
+    log.error(error)
   }
 
   SaveIndex(directoryPath)
-  console.log("indexed ", directoryPath)
+  log.info("indexed ", directoryPath)
 }
 
 async function handleFetch(mainWindow, outputPath, searchTerm, sessionId) {
-  console.log("Output Path:", outputPath)
-  console.log("Search Term:", searchTerm)
-  console.log("Starting fetch...")
+  log.info("Output Path:", outputPath)
+  log.info("Search Term:", searchTerm)
+  log.info("Starting fetch...")
 
   const pages = await getPages(searchTerm)
   mainWindow.webContents.send("fetch:reply", `Fetching ${pages.length} pages`)
@@ -196,7 +197,7 @@ async function handleFetch(mainWindow, outputPath, searchTerm, sessionId) {
     await saveContent(pages, outputPath, sessionId)
     mainWindow.webContents.send("fetch:done", "Indexing")
   } catch (err) {
-    console.log(err)
+    log.error(err)
   }
 
   SaveIndex(outputPath)
@@ -235,7 +236,7 @@ function createIndex() {
 }
 
 function LoadIndex(directoryPath, sessionId) {
-  console.log("Loading index...", directoryPath)
+  log.info("Loading index...", directoryPath)
   const indexFile = path.join(directoryPath, "index.json")
 
   if (!vectorStore) {
@@ -250,7 +251,7 @@ function LoadIndex(directoryPath, sessionId) {
 }
 
 function SaveIndex(directoryPath) {
-  console.log("Saving index...", directoryPath)
+  log.info("Saving index...", directoryPath)
   const indexFile = path.join(directoryPath, "index.json")
   const json = JSON.stringify(vectorStore.memoryVectors)
   fs.writeFileSync(indexFile, json)

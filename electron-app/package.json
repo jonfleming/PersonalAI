@@ -1,6 +1,6 @@
 {
   "name": "personal-ai",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "description": "Personal AI",
   "main": "main.js",
   "scripts": {
@@ -28,6 +28,7 @@
     "@azure/openai": "^1.0.0-beta.2",
     "@pinecone-database/pinecone": "^0.1.6",
     "dotenv": "^16.3.1",
+    "electron-log": "^4.4.8",
     "electron-squirrel-startup": "^1.0.0",
     "html-to-text": "^9.0.5",
     "ini": "^4.1.1",
