@@ -14,7 +14,11 @@ const { convert } = require("html-to-text")
 const azure = require("./azure-rest-api")
 const fileExtensions = [".txt", ".xslx", ".docx", ".pdf", ".csv"]
 
-require("dotenv").config()
+require('dotenv').config({
+  path: app.isPackaged
+      ? path.join(process.resourcesPath, '.env')
+      : path.resolve(process.cwd(), '.env'),
+})
 
 const spaces = {}
 let vectorStore = null
@@ -157,7 +161,7 @@ async function similaritySearch(prompt, sessionId) {
   return result
 }
 
-async function indexDirectory(directoryPath) {
+async function indexDirectory(directoryPath, sessionId) {
   if (!vectorStore) {
     createIndex()
   }
@@ -173,12 +177,15 @@ async function indexDirectory(directoryPath) {
   const docs = await loader.load()
   const splitDocs = await splitter.splitDocuments(docs)
 
+  splitDocs.forEach((doc) => (doc.metadata.sessionId = sessionId))
+
   try {
     await vectorStore.addDocuments(splitDocs)
   } catch (error) {
     console.log(error)
   }
 
+  SaveIndex(directoryPath)
   console.log("indexed ", directoryPath)
 }
 
@@ -196,7 +203,7 @@ async function handleFetch(mainWindow, outputPath, searchTerm, sessionId) {
     console.log(err)
   }
 
-  SaveIndex(outputPath, vectorStore)
+  SaveIndex(outputPath)
 }
 
 function getFilenames(directoryPath) {
@@ -231,7 +238,7 @@ function createIndex() {
   vectorStore = new MemoryVectorStore(embeddings)
 }
 
-function LoadIndex(directoryPath) {
+function LoadIndex(directoryPath, sessionId) {
   console.log("Loading index...", directoryPath)
   const indexFile = path.join(directoryPath, "index.json")
 
@@ -242,7 +249,7 @@ function LoadIndex(directoryPath) {
     const json = fs.readFileSync(path.join(directoryPath, "index.json"), "utf8")
     vectorStore.memoryVectors = JSON.parse(json)
   } else {
-    indexDirectory(directoryPath)
+    indexDirectory(directoryPath, sessionId)
   }
 }
 

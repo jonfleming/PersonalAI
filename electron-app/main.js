@@ -94,7 +94,7 @@ function openWindow() {
     const files = indexer.getFilenames(config.currentDir)
     mainWindow.webContents.send('dialog:reply', config.currentDir)
     mainWindow.webContents.send('dialog:filelist', files)
-    indexer.LoadIndex(config.currentDir)
+    indexer.LoadIndex(config.currentDir, sessionId)
   })
 
   ipcMain.on('dialog:openFolder', async () => {
@@ -108,7 +108,7 @@ function openWindow() {
       mainWindow.webContents.send('dialog:filelist', files)  
 
       if (needsIndexing(config.currentDir)) {
-        indexer.indexDirectory(config.currentDir)
+        indexer.indexDirectory(config.currentDir, sessionId)
       }
     }      
   })
