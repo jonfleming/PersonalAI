@@ -165,7 +165,13 @@ const LastPrompt = (props) => {
   const handleKeyDown = (event) => {
     if (!allowEdit) {
       event.preventDefault();
-      return false
+      return
+    }
+
+    if (event.key === 'Enter' && event.shiftKey) {
+      event.preventDefault();
+      setPrompt(prompt + '\n')
+      return
     }
 
     if (event.key === 'Enter') {
@@ -173,6 +179,7 @@ const LastPrompt = (props) => {
       setAllowEdit(false)
     }
   };
+
 
   const handleSubmit = () => {
     window.api.request("chat:completion", prompt)
@@ -291,6 +298,12 @@ const Prompt = () => {
   const [prompt, setPrompt] = React.useState('')
 
   const handleKeyDown = (event) => {
+    if (event.key === 'Enter' && event.shiftKey) {
+      event.preventDefault();
+      setPrompt(prompt + '\n')
+      return
+    }
+
     if (event.key === 'Enter') {
       handleSubmit()
     }
