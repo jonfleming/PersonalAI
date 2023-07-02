@@ -1,1 +1,1 @@
-C:\Users\jonfl\AppData\Local\Temp\electron-packager\win32-x64\personal-ai-win32-x64-ux7g94\resources\app
+C:\Users\jonfl\AppData\Local\Temp\electron-packager\win32-x64\personal-ai-win32-x64-1kcktl\resources\app
