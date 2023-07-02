@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog, ipcMain, Menu } = require("electron")
+const { app, BrowserWindow, dialog, globalShortcut, ipcMain, Menu } = require("electron")
 const path = require('path')
 const fs = require('fs');
 const ini = require('ini')
@@ -65,7 +65,7 @@ async function handleChat(prompt) {
 const createWindow = () => {
   const win = new BrowserWindow({
     minWidth: 800,
-    width: 800,
+    width: 1200,
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
@@ -88,7 +88,10 @@ const createWindow = () => {
 
 function openWindow() {
   const mainWindow = createWindow();
-  // mainWindow.webContents.openDevTools()
+  
+  globalShortcut.register('Control+Shift+I', () => {
+    mainWindow.webContents.openDevTools()
+  })
 
   ipcMain.on('init:filelist', async () => {
     log.info(`Sending filelist: ${config.currentDir}`)
@@ -138,6 +141,8 @@ app.whenReady().then(() => {
 .catch(err => log.error(err));
 
 app.on("window-all-closed", () => {
+  globalShortcut.unregisterAll();
+
   if (process.platform !== "darwin") app.quit()
 })
 
