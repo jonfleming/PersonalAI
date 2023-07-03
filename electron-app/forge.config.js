@@ -42,7 +42,7 @@ module.exports = {
   hooks: {
     packageAfterCopy: async (config, buildPath, electronVersion, platform, arch) => {
       console.log('**************** Copy ****************', buildPath)
-      fs.writeFileSync('./jon.txt', buildPath)
+      // fs.writeFileSync('./jon.txt', buildPath)
       const src = path.join(__dirname, '../react-app/build/');
       const dst = buildPath;
       fs.cpSync(src, dst, {recursive: true});
