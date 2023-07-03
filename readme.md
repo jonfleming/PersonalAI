@@ -40,7 +40,7 @@ CONFLUENCE_USER=\<your-confluence-user-name\>
 
 CONFLUENCE_TOKEN=\<your-confluence-api-token\>
 
-CONFLUENCE_UR=https://mcghealth.atlassian.net/wiki
+CONFLUENCE_URL=https://mcghealth.atlassian.net/wiki
 
 How to get your Confluence API Token [https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/)
 
@@ -58,3 +58,4 @@ When pages are downloaded from Confluence they are broken up into chuncks and ea
 
 When you type a question into chat, we use the embedding API again to turn your question into a vector.  We can then perform a query using `MemoryVectorStore.similaritySearch` which will return all of the Confluence chunks that are near your question in vector space.
 
+This context is then added to the question that gets sent as the prompt to ChatGPT.
