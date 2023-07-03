@@ -15,11 +15,6 @@ const log = require('electron-log');
 const azure = require("./azure-rest-api")
 
 require('dotenv').config()
-require('update-electron-app')({
-  repo: `jonfleming/PersonalAI`,
-  logger: log,
-  requireSignedApp: false
-})
 
 const fileExtensions = [".txt", ".xslx", ".docx", ".pdf", ".csv"]
 const spaces = {}

@@ -7,6 +7,11 @@ const azure = require('./azure-rest-api');
 const log = require('electron-log');
 
 require("dotenv").config()
+require('update-electron-app')({
+  repo: `jonfleming/PersonalAI`,
+  logger: log,
+  requireSignedApp: false
+})
 
 let requestId = 0
 let currentDir = './index'

@@ -201,6 +201,7 @@ const LastPrompt = (props) => {
       <>
         <PersonIcon style={{ marginTop: "10px" }} />
         <TextField
+          multiline
           inputRef={textRef}
           id="last-prompt"
           variant="outlined"
@@ -297,10 +298,17 @@ const ChatResponse = (props) => {
 const Prompt = () => {
   const [prompt, setPrompt] = React.useState('')
 
+  const insertAtCaret = (event, text) => {
+    const pos = event.target.selectionStart
+    const front = prompt.substring(0, pos)
+    const back = prompt.substring(pos, prompt.length)
+    setPrompt(front + text + back)
+  }
+
   const handleKeyDown = (event) => {
     if (event.key === 'Enter' && event.shiftKey) {
       event.preventDefault();
-      setPrompt(prompt + '\n')
+      insertAtCaret(event, '\n')
       return
     }
 
@@ -323,6 +331,7 @@ const Prompt = () => {
   return (
     <>
       <TextField
+        multiline
         id="last-prompt"
         placeholder="Prompt"
         variant="outlined"
