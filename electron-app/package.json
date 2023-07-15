@@ -3,7 +3,6 @@
   "version": "1.14.0",
   "description": "Personal AI",
   "main": "main.js",
-  "type": "module",
   "scripts": {
     "start": "electron-forge start",
     "test": "echo \"Error: no test specified\" && exit 1",

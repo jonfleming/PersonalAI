@@ -1,8 +1,9 @@
 // a class that implements langchainjs Embeddings
-const {pipeline } = require('@xenova/transformers')
-const {config } = require('dotenv')
-const embeddings = new OpenAIEmbeddings()
+const { OpenAIEmbeddings } = require("langchain/embeddings/openai")
 const azure = require('./azure-rest-api')
+require('dotenv').config()
+
+const embeddings = new OpenAIEmbeddings()
 
 class AzureEmbeddings {
   constructor(params) {
@@ -12,15 +13,13 @@ class AzureEmbeddings {
     return documents.map(async (document) => await this.embedQuery(document))
   }
 
-  // async embedQuery(document) {
-  //   //const output = await embeddings(document, { pooling: 'mean', normalize: true })    
-  //   const output = await embeddings.getEmbeddings({ input: document,  })
+  async getEmbeddings(document) {
+    const xenova = await import("@xenova/transformers");  // const {pipeline } = require('@xenova/transformers')
+    const xenovaEmbeddings = await xenova.pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2')
+    const output = await xenovaEmbeddings(document, { pooling: 'mean', normalize: true })
 
-  //   // output.data
-  //   // EmbeddingResponse = { 'object': string, 'model': string, 'data': Array<DataInner>, 'usage': EmbeddingResponseUsage}
-  //   // DataInner = { 'index': number, 'object':string, 'embedding': Array<number>)}
-  //   return output
-  // }
+    return output
+  }
 
   async embedQuery(text) {
     const response = await openai.createEmbedding({
