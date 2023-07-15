@@ -8,7 +8,7 @@ const { PDFLoader } = require("langchain/document_loaders/fs/pdf")
 const { DocxLoader } = require("langchain/document_loaders/fs/docx")
 const { CharacterTextSplitter } = require("langchain/text_splitter")
 const { OpenAIEmbeddings } = require("langchain/embeddings/openai")
-const { AzureEmbeddings } = require("./embeddings")
+const { xenova } = require("./embeddings")
 const { MemoryVectorStore } = require("langchain/vectorstores/memory")
 const { convert } = require("html-to-text")
 const log = require('electron-log');
@@ -232,8 +232,8 @@ function getFilenames(directoryPath) {
 }
 
 function createIndex() {
-  // const embeddings = new AzureEmbeddings()
-  const embeddings = new OpenAIEmbeddings()
+  const embeddings = new xenova()
+  // const embeddings = new OpenAIEmbeddings()
   vectorStore = new MemoryVectorStore(embeddings)
 }
 

@@ -16,7 +16,7 @@ async function getAccessToken(config) {
   }
 
   await exec('az.cmd', ['login'])
-  const data = await exec('az.cmd', ['account', 'get-access-token', '--resource', 'https://cognitiveservices.azure.com', '-o', 'json'])
+  const data = await exec('az.cmd', ['account', 'get-access-token', '--resource', settings.resource, '-o', 'json'])
   accessToken = JSON.parse(data).accessToken
   expiresOn = JSON.parse(data).expiresOn
 
@@ -29,7 +29,7 @@ function exec(cmd, params) {
 
     childProcess.stdout.on('data', (data) => {
       log.info(`stdout: ${data}`) 
-      spawn('az.cmd', ['account', 'set', '--subscription', '45ee5d37-dd7d-42dc-84d7-5c2c4aba7e1a'])  
+      spawn('az.cmd', ['account', 'set', '--subscription', settings.subscription])  
       resolve(data)
     })
 
