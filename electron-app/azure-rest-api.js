@@ -16,6 +16,8 @@ async function getAccessToken(config) {
   }
 
   await exec('az.cmd', ['login'])
+  await spawn('az.cmd', ['account', 'set', '--subscription', settings.subscription])
+  console.log('Getting access token')
   const data = await exec('az.cmd', ['account', 'get-access-token', '--resource', settings.resource, '-o', 'json'])
   accessToken = JSON.parse(data).accessToken
   expiresOn = JSON.parse(data).expiresOn
@@ -24,19 +26,26 @@ async function getAccessToken(config) {
 }
 
 function exec(cmd, params) {
+  console.log(`Executing: ${cmd} ${params.join(' ')}`)
+  let output = ''
+
   return new Promise((resolve, reject) => {
     const childProcess = spawn(cmd, params)
 
     childProcess.stdout.on('data', (data) => {
-      log.info(`stdout: ${data}`) 
-      spawn('az.cmd', ['account', 'set', '--subscription', settings.subscription])  
+      output += data
+      log.info(`stdout: ${data}`)       
       resolve(data)
+    })
+
+    childProcess.on('close', (code) => {
+      console.log(`child process exited with code ${code}`)
     })
 
     childProcess.on('error', (error) => {
       log.error(error)
       reject(error)
-    });
+    })
   })  
 }
 

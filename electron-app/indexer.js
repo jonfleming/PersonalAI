@@ -1,27 +1,33 @@
-const fetch = require("node-fetch")
-const path = require("path")
-const fs = require("fs")
-const { DirectoryLoader } = require("langchain/document_loaders/fs/directory")
-const { TextLoader } = require("langchain/document_loaders/fs/text")
-const { CSVLoader } = require("langchain/document_loaders/fs/csv")
-const { PDFLoader } = require("langchain/document_loaders/fs/pdf")
-const { DocxLoader } = require("langchain/document_loaders/fs/docx")
-const { CharacterTextSplitter } = require("langchain/text_splitter")
-const { OpenAIEmbeddings } = require("langchain/embeddings/openai")
-const { xenova } = require("./embeddings")
-const { MemoryVectorStore } = require("langchain/vectorstores/memory")
-const { convert } = require("html-to-text")
+const fetch = require('node-fetch')
+const path = require('path')
+const fs = require('fs')
+const ini = require('ini')
+
+const { DirectoryLoader } = require('langchain/document_loaders/fs/directory')
+const { TextLoader } = require('langchain/document_loaders/fs/text')
+const { CSVLoader } = require('langchain/document_loaders/fs/csv')
+const { PDFLoader } = require('langchain/document_loaders/fs/pdf')
+const { DocxLoader } = require('langchain/document_loaders/fs/docx')
+const { UnstructuredLoader } = require('langchain/document_loaders/fs/unstructured')
+const { CharacterTextSplitter } = require('langchain/text_splitter')
+const { OpenAIEmbeddings } = require('langchain/embeddings/openai')
+const  xenova = require('./embeddings')
+const { MemoryVectorStore } = require('langchain/vectorstores/memory')
+const { PineconeClient } = require('@pinecone-database/pinecone')
+const { PineconeStore } = require('langchain/vectorstores/pinecone')
+const { convert } = require('html-to-text')
 const log = require('electron-log');
-const azure = require("./azure-rest-api")
+const azure = require('./azure-rest-api')
+const { config } = require('dotenv')
 
 require('dotenv').config()
 
-const fileExtensions = [".txt", ".xslx", ".docx", ".pdf", ".csv"]
+const fileExtensions = ['.txt', '.xslx', '.docx', '.pdf', '.csv', '.html']
 const spaces = {}
 let vectorStore = null
 
 const splitter = new CharacterTextSplitter({
-  separator: " ",
+  separator: ' ',
   chunkSize: 100,
   chunkOverlap: 3,
 })
@@ -33,16 +39,16 @@ const htmlOptions = {
 const confluenceAuth = btoa(`${process.env.CONFLUENCE_USER}:${process.env.CONFLUENCE_TOKEN}`)
 
 const options = {
-  method: "GET",
+  method: 'GET',
   headers: {
     Authorization: `Basic ${confluenceAuth}`,
-    Accept: "application/json",
+    Accept: 'application/json',
   },
 }
 
 const request = async (url) => {
   const response = await fetch(url, options)
-  log.info("Request:", url)
+  log.info('Request:', url)
   const json = await response.json()
 
   return json
@@ -66,13 +72,13 @@ const getSpace = async (spaceKey) => {
 }
 
 const getSpaceKey = (url) => {
-  const spaceKey = url.split("/")[2]
+  const spaceKey = url.split('/')[2]
 
   return spaceKey
 }
 
 const getPages = async (title) => {
-  const queryString = `type="page" and title~"*${title}*"&includeArchivedSpaces=false&limit=20`
+  const queryString = `type='page' and title~'*${title}*'&includeArchivedSpaces=false&limit=20`
   const response = await request(
     `${process.env.CONFLUENCE_URL}/rest/api/search?cql=${queryString}`
   )
@@ -106,9 +112,9 @@ const savePage = async (spaceKey, outputPath, title, body, sessionId) => {
 
   const text = convert(body, htmlOptions)
   let filename = `${title
-    .replace(/\//g, " - ")
-    .replace(/</g, "(")
-    .replace(/>/g, ")")}.txt`
+    .replace(/\//g, ' - ')
+    .replace(/</g, '(')
+    .replace(/>/g, ')')}.txt`
   filename = path.join(directory, filename)
 
   if (!fs.existsSync(filename)) {
@@ -149,12 +155,12 @@ async function indexPage(filename, sessionId) {
     log.error(error)
   }
 
-  log.info("indexed ", filename)
+  log.info('indexed ', filename)
 }
 
 async function similaritySearch(prompt, sessionId) {
   const filter = (doc) => doc.metadata.sessionId === sessionId
-  const result = await vectorStore.similaritySearch(prompt, 20, filter)
+  const result = await vectorStore.similaritySearch(prompt, 30, filter)
   log.info(result)
 
   return result
@@ -162,16 +168,18 @@ async function similaritySearch(prompt, sessionId) {
 
 async function indexDirectory(directoryPath, sessionId) {
   if (!vectorStore) {
-    createIndex()
+    await createIndex()
   }
   
   const loader = new DirectoryLoader(directoryPath, {
-    ".txt": (path) => new TextLoader(path),
-    ".csv": (path) => new CSVLoader(path, "text"),
-    ".pdf": (path) => new PDFLoader(path),
-    ".docx": (path) => new DocxLoader(path),
-    ".ini": (path) => new TextLoader(path),
-  })
+      '.txt': (path) => new TextLoader(path),
+      '.csv': (path) => new CSVLoader(path, 'text'),
+      '.pdf': (path) => new PDFLoader(path),
+      '.docx': (path) => new DocxLoader(path),
+      '.xlsx': (path) => new UnstructuredLoader(path),
+      '.html': (path) => new UnstructuredLoader(path),
+      }, 
+  )
 
   const docs = await loader.load()
   const splitDocs = await splitter.splitDocuments(docs)
@@ -184,25 +192,25 @@ async function indexDirectory(directoryPath, sessionId) {
     log.error(error)
   }
 
-  SaveIndex(directoryPath)
-  log.info("indexed ", directoryPath)
+  sessionId = saveIndex(directoryPath)
+  log.info('indexed ', directoryPath)
 }
 
 async function handleFetch(mainWindow, outputPath, searchTerm, sessionId) {
-  log.info("Output Path:", outputPath)
-  log.info("Search Term:", searchTerm)
-  log.info("Starting fetch...")
+  log.info('Output Path:', outputPath)
+  log.info('Search Term:', searchTerm)
+  log.info('Starting fetch...')
 
   const pages = await getPages(searchTerm)
-  mainWindow.webContents.send("fetch:reply", `Fetching ${pages.length} pages`)
+  mainWindow.webContents.send('fetch:reply', `Fetching ${pages.length} pages`)
   try {
     await saveContent(pages, outputPath, sessionId)
-    mainWindow.webContents.send("fetch:done", "Indexing")
+    mainWindow.webContents.send('fetch:done', 'Indexing')
   } catch (err) {
     log.error(err)
   }
 
-  SaveIndex(outputPath)
+  return saveIndex(outputPath)
 }
 
 function getFilenames(directoryPath) {
@@ -218,12 +226,12 @@ function getFilenames(directoryPath) {
       result.push({
         name: item,
         path: fullPath,
-        type: "directory",
+        type: 'directory',
         children: getFilenames(fullPath),
       })
     } else {
       fileExtensions.includes(path.extname(item).toLowerCase())
-        ? result.push({ name: item, path: fullPath, type: "file" })
+        ? result.push({ name: item, path: fullPath, type: 'file' })
         : null
     }
   }
@@ -231,36 +239,76 @@ function getFilenames(directoryPath) {
   return result
 }
 
-function createIndex() {
-  const embeddings = new xenova()
-  // const embeddings = new OpenAIEmbeddings()
-  vectorStore = new MemoryVectorStore(embeddings)
+function readConfig() {
+  let config = {}
+  if (fs.existsSync('./config.ini')) {
+    console.log('Read config')
+    config = ini.parse(fs.readFileSync('./config.ini', 'utf-8'))
+  } else {
+    console.log('No config found')
+  }
+
+  return config
 }
 
-function LoadIndex(directoryPath, sessionId) {
-  log.info("Loading index...", directoryPath)
-  const indexFile = path.join(directoryPath, "index.json")
+function writeConfig(config) {
+  fs.writeFileSync('./config.ini', ini.stringify(config))
+}
+
+async function createIndex() {
+  if (process.env.INDEX_TYPE === 'memory') {
+    const embeddings = new xenova()
+    vectorStore = new MemoryVectorStore(embeddings)
+  } else {
+    const client = new PineconeClient()
+    await client.init({
+      apiKey: process.env.PINECONE_API_KEY,
+      environment: process.env.PINECONE_ENVIRONMENT,
+    });
+    const pineconeIndex = client.Index(process.env.PINECONE_INDEX);
+    const embeddings = new OpenAIEmbeddings()
+    vectorStore = await PineconeStore.fromExistingIndex(embeddings, { pineconeIndex });
+  }
+}
+
+async function LoadIndex(directoryPath, sessionId) {
+  log.info('Loading index...', directoryPath)
+  const indexFile = path.join(directoryPath, 'index.ini')
 
   if (!vectorStore) {
-    createIndex()
+    await createIndex()
   }
   if (fs.existsSync(indexFile)) {
-    const json = fs.readFileSync(path.join(directoryPath, "index.json"), "utf8")
-    vectorStore.memoryVectors = JSON.parse(json)
+    const index = ini.parse(fs.readFileSync(indexFile, 'utf-8'))
+    sessionId = index.sessionId
   } else {
-    indexDirectory(directoryPath, sessionId)
+    await indexDirectory(directoryPath, sessionId)
   }
+
+  return sessionId
 }
 
-function SaveIndex(directoryPath) {
-  log.info("Saving index...", directoryPath)
-  const indexFile = path.join(directoryPath, "index.json")
-  const json = JSON.stringify(vectorStore.memoryVectors)
-  fs.writeFileSync(indexFile, json)
+function saveIndex(directoryPath) {
+  const iniFile = path.join(directoryPath, 'index.ini')
+  log.info('Saving index...', directoryPath)
+  
+  if (fs.existsSync(iniFile)) {
+    const index = ini.parse(fs.readFileSync(iniFile, 'utf-8'))
+    sessionId = index.sessionId
+  } else {
+    sessionId = `${Date.now()}`
+    const index = {
+      sessionId
+    }
+  
+    fs.writeFileSync(iniFile, ini.stringify(index))
+  }
+  
+  return sessionId
 }
 
 function test() {
-  const response = azure.getEmbeddings("Hello World")
+  const response = azure.getEmbeddings('Hello World')
 }
 
 module.exports = {
@@ -269,7 +317,9 @@ module.exports = {
   similaritySearch,
   createIndex,
   LoadIndex,
-  SaveIndex,
+  saveIndex,
   indexDirectory,
+  readConfig,
+  writeConfig,
   test,
 }

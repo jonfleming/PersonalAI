@@ -5,30 +5,30 @@ require('dotenv').config()
 
 const embeddings = new OpenAIEmbeddings()
 
-class AzureEmbeddings {
+class XenovaEmbeddings {
   constructor(params) {
+    console.log("XenovaEmbeddings constructor")
   }
 
   async embedDocuments(documents) {    
     return documents.map(async (document) => await this.embedQuery(document))
   }
 
-  async getEmbeddings(document) {
+  async getEmbeddings(text) {
     const xenova = await import("@xenova/transformers");  // const {pipeline } = require('@xenova/transformers')
     const xenovaEmbeddings = await xenova.pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2')
-    const output = await xenovaEmbeddings(document, { pooling: 'mean', normalize: true })
+    const output = await xenovaEmbeddings(text, { pooling: 'mean', normalize: true })
 
-    return output
+    return output.data
   }
 
   async embedQuery(text) {
-    const response = await openai.createEmbedding({
-      input: text,
-      model: 'text-embedding-ada-002',
-    });
+    // LangChain/embeddings/oppenai
+    // const response = await embeddings.embedQuery(text);
+    const response = await this.getEmbeddings(text)
   
-    return response.data.embedding;
+    return response; // an array of numbers
   }
 }
 
-module.exports = { AzureEmbeddings }
+module.exports = XenovaEmbeddings

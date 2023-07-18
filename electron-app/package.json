@@ -34,6 +34,8 @@
     "html-to-text": "^9.0.5",
     "ini": "^4.1.1",
     "langchain": "^0.0.96",
+    "mammoth": "^1.6.0",
+    "pdf-parse": "^1.1.1",
     "update-electron-app": "^2.0.1"
   }
 }

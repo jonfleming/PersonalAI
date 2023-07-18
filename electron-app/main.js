@@ -1,7 +1,6 @@
 const { app, BrowserWindow, dialog, globalShortcut, ipcMain, Menu } = require("electron")
 const path = require('path')
 const fs = require('fs');
-const ini = require('ini')
 const indexer = require('./indexer')
 const azure = require('./azure-rest-api');
 const log = require('electron-log');
@@ -24,36 +23,13 @@ function needsIndexing(currentDir) {
   return !fs.existsSync(indexFile)
 }
 
-function saveConfig(currentDir) {
-  const indexFile = path.join(currentDir, 'index.json')
-  const iniFile = path.join(currentDir, 'index.ini')
-  let retval = false
-  
-  if (fs.existsSync(iniFile)) {
-    const index = ini.parse(fs.readFileSync(iniFile, 'utf-8'))
-    sessionId = index.sessionId
-  } else {
-    sessionId = `${Date.now()}`
-    const index = {
-      sessionId
-    }
-
-    fs.writeFileSync(iniFile, ini.stringify(index))
-  }
-  
-  config.currentDir = currentDir
-  config.sessionId = sessionId
-
-  fs.writeFileSync('./config.ini', ini.stringify(config))
-}
-
 async function handleChat(prompt) {
   if (prompt === 'test') {
     indexer.text()
     return
   }
   const matches = await indexer.similaritySearch(prompt, sessionId)
-  const context = matches.map(x => x.pageContent).join(' ')
+  const context = matches.map(x => x.pageContent).join(' ').substring(0, 6000)
 
   const data = {
     "messages": [
@@ -103,21 +79,23 @@ function openWindow() {
     const files = indexer.getFilenames(config.currentDir)
     mainWindow.webContents.send('dialog:reply', config.currentDir)
     mainWindow.webContents.send('dialog:filelist', files)
-    indexer.LoadIndex(config.currentDir, sessionId)
+    sessionId = indexer.LoadIndex(config.currentDir, sessionId)
   })
 
   ipcMain.on('dialog:openFolder', async () => {
     const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openDirectory']})
     
     if (!canceled) {
-      saveConfig(filePaths[0])
+      config.currentDir = filePaths[0]
+      config.sessionId = indexer.saveIndex(config.currentDir)
+      indexer.writeConfig(config)
       mainWindow.webContents.send('dialog:reply', config.currentDir)
 
       const files = indexer.getFilenames(config.currentDir)
       mainWindow.webContents.send('dialog:filelist', files)  
 
       if (needsIndexing(config.currentDir)) {
-        indexer.indexDirectory(config.currentDir, sessionId)
+        await indexer.indexDirectory(config.currentDir, sessionId)
       }
     }      
   })
@@ -152,21 +130,20 @@ app.on("window-all-closed", () => {
 })
 
 async function main() {
-  if (fs.existsSync('./config.ini')) {
-    config = ini.parse(fs.readFileSync('./config.ini', 'utf-8'))
-    currentDir = config.currentDir
-    sessionId = config.sessionId
-  
-    const {accessToken, expiresOn} = await azure.getAccessToken(config)
-    config.accessToken = accessToken
-    config.expiresOn = expiresOn
-    fs.writeFileSync('./config.ini', ini.stringify(config))
-  }
-  
+  config = indexer.readConfig()
+  currentDir = config.currentDir
+  sessionId = config.sessionId
+
+  const {accessToken, expiresOn} = await azure.getAccessToken(config)
+  config.accessToken = accessToken
+  config.expiresOn = expiresOn
+
+  indexer.writeConfig(config)
+
   if (!fs.existsSync(currentDir)) {
+    console.log(`Creating ${currentDir}`)
     fs.mkdirSync(currentDir)
   }
-
 
   openWindow()
 }
