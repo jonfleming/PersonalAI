@@ -156,7 +156,7 @@ const LastPrompt = (props) => {
   useEffect(() => {
     setPrompt(props.prompt)
   }, [props.prompt])
-  
+
   const handleChange = (event) => {
     const text = event.target.value
     setPrompt(text)
@@ -266,18 +266,18 @@ const ChatResponse = (props) => {
     box-shadow: 0px 2px 24px ${
       theme.palette.mode === "dark" ? blue[900] : blue[100]
     };
-  
+
     &:hover {
       border-color: ${blue[400]};
     }
-  
+
     &:focus {
       border-color: ${blue[400]};
       box-shadow: 0 0 0 3px ${
         theme.palette.mode === "dark" ? blue[600] : blue[200]
       };
     }
-  
+
     // firefox
     &:focus-visible {
       outline: 0;
@@ -316,7 +316,7 @@ const Prompt = () => {
       handleSubmit()
     }
   };
-  
+
   const handleChange = (event) => {
     const text = event.target.value
     setPrompt(text)
@@ -453,17 +453,6 @@ export default function Sidebar() {
             <MenuIcon />
           </IconButton>
           <SelectedFolder />
-          <Box
-            style={{ marginLeft: "auto" }}
-            sx={{ display: { xs: "none", sm: "block" } }}
-            variant="outlined">
-            <Button
-              id="fetch-dialog-btn"
-              sx={{ color: "#fff" }}
-              onClick={showFetchDialog}>
-              <SearchIcon />
-            </Button>
-          </Box>
         </Toolbar>
       </AppBar>
       <Drawer
