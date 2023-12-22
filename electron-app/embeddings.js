@@ -10,7 +10,7 @@ class XenovaEmbeddings {
     console.log("XenovaEmbeddings constructor")
   }
 
-  async embedDocuments(documents) {    
+  async embedDocuments(documents) {
     return documents.map(async (document) => await this.embedQuery(document))
   }
 
@@ -24,9 +24,9 @@ class XenovaEmbeddings {
 
   async embedQuery(text) {
     // LangChain/embeddings/oppenai
-    // const response = await embeddings.embedQuery(text);
-    const response = await this.getEmbeddings(text)
-  
+    const response = await embeddings.embedQuery(text);
+    // const response = await this.getEmbeddings(text)
+
     return response; // an array of numbers
   }
 }

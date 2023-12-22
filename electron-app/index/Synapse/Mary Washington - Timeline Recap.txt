@@ -1,0 +1,37 @@
+Observation
+
+Delivered
+
+ * Request to have IAD to ICM intermittent note failure resolved by Thanksgiving
+
+11/11/2021
+
+ * 11/12/2021
+   
+   * Request to have intermittent duplication in Epic documentation resolved by Thanksgiving
+   
+   * This was identified as a workflow error. Users will selecting “Create New Episode” vs “Edit Episode” which was causing
+     duplications of their ICM reviews in Epic.
+
+This will be included in the refresher training performed for the Mary Washington team
+
+ * 11/12/2021
+   
+   * Request to have met/not met item targeted for development in early 2022 moved up in priority. Not included in the
+     Thanksgiving timeline.
+     
+     * This request was to more closely align how IAD and ICM select indications and their parents and was identified as an
+       enhancement specific to Mary Washington due to the amount of new staff that they were bringing on board. IAD was
+       functioning as intended and the staff was previously trained on the indication selection (met/not met) functionality.
+
+12/2/2021
+
+ * 12/2/2021:
+   
+   * Post Thanksgiving observation and enhancement request about the UR tab in Epic displaying both the documented indications
+     from ICM as well as the notes from IAD - causing what appeared to be a duplication.
+
+12/14/2021
+
+
+

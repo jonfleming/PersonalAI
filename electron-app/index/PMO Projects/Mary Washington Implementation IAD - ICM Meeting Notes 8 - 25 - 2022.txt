@@ -1,0 +1,173 @@
+OVERVIEW
+
+Project lead
+
+
+
+Customer
+
+Mary Washington
+
+Go live date
+
+July 12th, 2021
+
+Status
+
+Post Go Live Support
+
+Agenda/Notes
+
+Agenda
+
+ * Demo NLP Updates/Mock Ups -Abbey Armstead
+
+ * Two pieces of documentation from ICM pulled to IAD under a different user (from initial user who documented (Matthew). -
+   Resolved
+
+ * Intermittent failures for documentation Error not flowing into ICM- the team is investigating. - Resolved
+
+Action Items
+
+ * will schedule a meeting with stakeholders to review slide deck for client summit.
+
+ * MCG would like to review sample data templates and current workflows used in encounters further.
+
+ * The following templates are used: diagnosis; diagnostic/imaging; medications/mar; labs; vital signs; ED initial notes and
+   certain segments from physician’s exam.
+
+
+
+
+
+
+PARTICIPANTS
+
+Name
+
+Role
+
+Company
+
+Attended
+
+
+
+Senior Program Manager
+
+MCG
+
+Yes
+
+
+
+Senior Product Manager
+
+
+
+Yes
+
+
+
+Dev Manager
+
+
+
+No
+
+
+
+Technical Support Analyst
+
+
+
+Yes
+
+
+
+Product Manager
+
+
+
+Yes
+
+
+
+Senior Dev. Engineer
+
+
+
+No
+
+
+
+Senior Manager, Client Implementation
+
+
+
+No
+
+
+
+Account Executive
+
+
+
+Yes
+
+
+
+Senior Care Strategy Consultant
+
+
+
+Yes
+
+
+
+Implementation Analyst II
+
+
+
+No
+
+Mary Lloyd
+
+Quality Improvement Performance, CC3 - Clinical Care Coordinators
+
+Mary Washington
+
+Yes
+
+Lori Vaillancourt
+
+Analyst, Epic Inpatient Clinical
+
+Mary Washington
+
+Yes
+
+Dr. Saberinia Hooman
+
+Medical Director of Utilization, Clinical Documentation and Care Coordination
+
+Mary Washington
+
+No
+
+Patti Lipson
+
+Manager Case Management
+
+Mary Washington
+
+No
+
+Kaitlin Pankratz
+
+Epic TS
+
+Epic
+
+No
+

@@ -1,0 +1,207 @@
+OVERVIEW
+
+Project lead
+
+
+
+Customer
+
+Mary Washington
+
+Go live date
+
+July 12th, 2021
+
+Status
+
+Post Go Live Support
+
+Agenda/Notes
+
+Agenda
+
+ * Tickets: MCG 00303008 and SLG with Epic 6772028.
+   
+   * MW reporting issues w/launching IAD intermittently.
+   
+   * 4/20/22, IAD was launching with Internet Explorer, for users configured to use Edge (and IAD did not launch successfully in
+     Internet Explorer) (this is with the Nov 2021 release)
+   
+   * Users were also reporting that they were seeing the full launch URL in the browser window (when launched in a separate
+     window), which was not the case previously.
+   
+   * With the Feb 2022 release (in the test environment), the team is testing an option to 'use default browser', which is briefly
+     opening a separate window with a message similar to 'using default browser'; this window closes, and a separate browser
+     window opens behind the user's Epic window; MCG had not seen this configuration before, but this behavior did not seem to be
+     what the MW users were expecting.
+   
+   Per Dominic Berra:
+   
+   * Mary Washington is taking a SU fix tomorrow morning (4/27) that the Epic team expects to resolve all the issues noted above.
+
+ * Mary Washington will install fixes to resolve the two issues (1. full url displaying and 2. launch error) in PROD on 5/10 with
+   Epic upgrade per Epic’s request.
+   
+   * Lori and Mary confirmed issues resolved in TEST.
+
+Action Items
+
+ * will f/u with the team on why the calculator (after CURB score) is not displaying for the gl “PNA: OBS CARE OC-030).
+
+ * Chamnan will update the meeting cadence to monthly.
+
+ * will send Mary an email next week for Kelley and Cathy’s on site visit.
+
+ * will sync to work on values story.
+
+
+
+
+
+
+PARTICIPANTS
+
+Name
+
+Role
+
+Company
+
+Attended
+
+
+
+Senior Program Manager
+
+MCG
+
+Yes
+
+
+
+Senior Product Manager
+
+
+
+No
+
+
+
+Dev Manager
+
+
+
+No
+
+
+
+Technical Support Analyst
+
+
+
+Yes
+
+
+
+Product Manager
+
+
+
+No
+
+
+
+Senior Product Owner
+
+
+
+No
+
+
+
+Senior Dev. Engineer
+
+
+
+No
+
+
+
+Senior Manager, Client Implementation
+
+
+
+No
+
+
+
+Account Executive
+
+
+
+Yes
+
+
+
+Solution Delivery Project Manager
+
+
+
+Yes
+
+
+
+Senior Care Strategy Consultant
+
+
+
+Yes
+
+
+
+Implementation Analyst II
+
+
+
+Yes
+
+Mary Lloyd
+
+Quality Improvement Performance, CC3 - Clinical Care Coordinators
+
+Mary Washington
+
+Yes
+
+Lori Vaillancourt
+
+Analyst, Epic Inpatient Clinical
+
+Mary Washington
+
+Yes
+
+Dr. Saberinia Hooman
+
+Medical Director of Utilization, Clinical Documentation and Care Coordination
+
+Mary Washington
+
+No
+
+Patti Lipson
+
+Manager Case Management
+
+Mary Washington
+
+No
+
+Kaitlin Pankratz
+
+Epic TS
+
+Epic
+
+No
+

@@ -1,0 +1,217 @@
+OVERVIEW
+
+Project lead
+
+
+
+Customer
+
+Mary Washington
+
+Go live date
+
+July 12th, 2021
+
+Status
+
+Post Go Live Support
+
+Agenda/Notes
+
+Go Live Check In/Updates
+
+ * All training for C3s have been completed.
+   
+   * “Unit C3s love the tool”. -Mary L.
+   
+   * “Love the discharge criteria”
+   
+   * This is helpful with progression of care.
+
+ * UR team is currently not using IAD.
+
+ * Mary Washington is working on defining on site requirements.
+
+ * Meeting cadence adjusted to biweekly for post go live support.
+
+ * will sync to work on values story.
+
+ * Notes Updated from
+   
+   * Surgical case yesterday. Lap coli. I was sooo (struggling)…I don’t do surgical…It was so awesome to see the operative status
+     criteria! So easy to use!
+     The Unit C3s love the tool. Everyone is using it now.
+     IAD Really helps, the users don’t find it cumbersome or confusing. They find it really easy to use.
+     It’s going to be awesome. This tool is great. I read something that it decreases the timing of a review from 15-20 minutes.
+     This is really valuable and I see it as a big time savings.Continued stay for observation is going excellent.Love the
+     discharge milestones for the discharge criteria. They find it very helpful when doing snap huddles. It helps generate
+     questions – “Why are they staying here…?” etc.
+     
+     * Its really helpful for the progression of care as well. Helps move the patient along.
+     
+     Sarah talked about IEF today and will be reaching out about that too
+
+
+PARTICIPANTS
+
+Name
+
+Role
+
+Company
+
+Attended
+
+
+
+Senior Program Manager
+
+MCG
+
+No
+
+
+
+Director Program Management
+
+
+
+No
+
+
+
+Senior Product Manager
+
+
+
+Yes
+
+
+
+Senior Product Owner
+
+
+
+Yes
+
+
+
+Product Owner
+
+
+
+Yes
+
+
+
+Account Executive
+
+
+
+Yes
+
+
+
+Senior Scrum Master
+
+
+
+No
+
+
+
+Solution Delivery Project Manager
+
+
+
+No
+
+
+
+Senior Care Strategy Consultant
+
+
+
+No
+
+
+
+Associate Director
+
+
+
+No
+
+
+
+Manager Clinical Informatics
+
+
+
+No
+
+
+
+Clinical Educator
+
+
+
+No
+
+Mary Lloyd
+
+Quality Improvement Performance, CC3 - Clinical Care Coordinators
+
+Mary Washington
+
+Yes
+
+Lori Vaillancourt
+
+Analyst, Epic Inpatient Clinical
+
+Mary Washington
+
+Yes
+
+Dr. Saberinia Hooman
+
+Medical Director of Utilization, Clinical Documentation and Care Coordination
+
+Mary Washington
+
+No
+
+Patti Lipson
+
+Manager Case Management
+
+Mary Washington
+
+Yes
+
+
+
+Observations Reported
+
+Resolution
+
+Status
+
+ * Users getting an error in the Test Environment in Epic (Configuration Item)
+
+ * Lori opening a ticket with Epic this afternoon
+
+Open
+
+ * Intermittent issues when launching ICM after documenting in ICM
+
+ * MCG has entered a suppor ticket to investigate
+
+In Progress
+
+ * Mary to send Abbey/Rita the list of attendees for Mary Washington moving forward
+
+
+
+Open

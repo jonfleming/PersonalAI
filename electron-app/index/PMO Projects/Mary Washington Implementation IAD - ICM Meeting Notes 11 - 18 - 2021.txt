@@ -1,0 +1,245 @@
+2flatpipe
+
+
+OVERVIEW
+
+Project lead
+
+
+
+Customer
+
+Mary Washington
+
+Go live date
+
+July 12th, 2021
+
+Status
+
+Post Go Live Support
+
+Agenda/Notes
+
+Issues Updates
+
+ * Roll Out Plan
+   
+   * ED care coordinators will continue to use IAD
+   
+   * Will revisit roll out plan to additional users once the indications enhancement has been completed.
+     
+     * MCG has started the development work for the indications met enhancement. ETA for completion TBD (prior to Jan. 2022).
+     
+     * Change will occur in IAD ONLY and not ICM. - No upgrades needed.
+
+ * Mary will share templates used in workflow that is dropped in the notes section by 11/12. -received 11/12
+   
+   * MCG will start this work in 2022 and will provide updates once available.
+
+ * Duplicate Criteria Review Record (in Epic)
+   
+   * Mary will repro duplicate criteria review case in TST and will send screenshot to MCG. -received screenshots 11/18
+   
+   * MCG to sync internally to review each observations (observations are from 11/16).
+
+ * Provision IAD to sync IAD PROD LMR.
+   
+   * Test Launch
+     
+     * Verify Access in TEST
+     
+     * If TEST passes will push to PRD and TEST in PRD today.
+     
+     * Access to TEST passed.
+     
+     * Will meet on 11/20 to test PROD. Mary will complete a review prior to call.
+
+Backlog
+
+ * Summary notes configuration
+   
+   * Epic reported they add timestamps on the Epic UI (even if MCG does not send timestamps as part of our summary).
+   
+   * This is an Epic feature enhancement request that will require development work on their end.
+   
+   * The recommendation from MCG is to follow up with your Epic TS for updates and to continue to let them know you would like
+     this enhancement.
+   
+   * Natalie will continue to follow up with Jacob from Epic however we do not have a timeline for this work.
+
+
+
+
+PARTICIPANTS
+
+Name
+
+Role
+
+Company
+
+Attended
+
+
+
+Senior Program Manager
+
+MCG
+
+Yes
+
+
+
+Senior Product Manager
+
+
+
+Yes
+
+
+
+Senior Manager, Client Implementation
+
+
+
+No
+
+
+
+Senior Product Owner
+
+
+
+Yes
+
+
+
+Product Owner
+
+
+
+Yes
+
+
+
+Account Executive
+
+
+
+Yes
+
+
+
+Senior Software Engineer
+
+
+
+No
+
+
+
+Implementation Analyst
+
+
+
+Yes
+
+
+
+Solution Delivery Project Manager
+
+
+
+Yes
+
+
+
+Salesforce Developer
+
+
+
+Yes
+
+
+
+Software Development Engineer
+
+
+
+Yes
+
+
+
+Senior Scrum Master
+
+
+
+Yes
+
+
+
+Manager Software Engineer
+
+
+
+No
+
+
+
+UA Technical Writer
+
+
+
+No
+
+
+
+Associate Director
+
+
+
+No
+
+
+
+Manager Clinical Informatics
+
+
+
+No
+
+Patti Lipson
+
+RN Manager, Case Management
+
+Mary Washington
+
+Yes
+
+Mary Lloyd
+
+Quality Improvement Performance, CC3 - Clinical Care Coordinators
+
+
+
+Yes
+
+Anna Moran
+
+Epic Analyst and Principal Trainer
+
+
+
+No
+
+Lori Vaillancourt
+
+Analyst, Epic Inpatient Clinical
+
+
+
+Yes
+
+
+

@@ -1,0 +1,202 @@
+OVERVIEW
+
+Project lead
+
+
+
+Customer
+
+Mary Washington
+
+Go live date
+
+July 12th, 2021
+
+Status
+
+Post Go Live Support
+
+Agenda/Notes
+
+Agenda
+
+ * Tickets: MCG 00303008 and SLG with Epic 6772028.
+   
+   * MW reporting issues w/launching IAD intermittently.
+
+Action Items
+
+ * MCG to follow up with our Epic consult on Edge vs. Explorer default settings.
+
+ * Kaitlin will f/u with Epic on any infrastructure changes/updates for hosted clients.
+
+ * MW is experiencing issues and getting script error message in their TEST environment.
+
+ * MCG to review reporting logs for lags.
+
+Did not get to
+
+ * Mary will sync with Lori on Epic configurations and error messages.
+
+ * will sync to work on values story.
+
+
+
+
+
+
+PARTICIPANTS
+
+Name
+
+Role
+
+Company
+
+Attended
+
+
+
+Senior Program Manager
+
+MCG
+
+Yes
+
+
+
+Senior Product Manager
+
+
+
+Yes
+
+
+
+Dev Manager
+
+
+
+No
+
+
+
+Product Manager
+
+
+
+No
+
+
+
+Senior Product Owner
+
+
+
+No
+
+
+
+Senior Dev. Engineer
+
+
+
+Yes
+
+
+
+Senior Manager, Client Implementation
+
+
+
+No
+
+
+
+Account Executive
+
+
+
+Yes
+
+
+
+Solution Delivery Project Manager
+
+
+
+No
+
+
+
+Senior Care Strategy Consultant
+
+
+
+Yes
+
+Mary Lloyd
+
+Quality Improvement Performance, CC3 - Clinical Care Coordinators
+
+Mary Washington
+
+Yes
+
+Lori Vaillancourt
+
+Analyst, Epic Inpatient Clinical
+
+Mary Washington
+
+Yes
+
+Dr. Saberinia Hooman
+
+Medical Director of Utilization, Clinical Documentation and Care Coordination
+
+Mary Washington
+
+No
+
+Patti Lipson
+
+Manager Case Management
+
+Mary Washington
+
+Yes
+
+Kaitlin Pankratz
+
+Epic TS
+
+Epic
+
+Yes
+
+
+
+Observations Reported
+
+Resolution
+
+Status
+
+ * Users getting an error in the Test Environment in Epic (Configuration Item)
+
+ * Lori opening a ticket with Epic this afternoon
+
+Open
+
+ * Intermittent issues when launching ICM after documenting in ICM
+
+ * MCG has entered a support ticket to investigate
+
+In Progress
+
+ * Mary to send Abbey/Rita the list of attendees for Mary Washington moving forward
+
+
+
+Completed

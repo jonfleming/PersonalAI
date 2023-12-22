@@ -1,0 +1,437 @@
+2flatpipe
+
+
+OVERVIEW
+
+Project lead
+
+
+
+Customer
+
+Mary Washington
+
+Go live date
+
+July 12th, 2021
+
+Status
+
+Post Go Live Support
+
+Agenda/Notes
+
+Issues Updates
+
+ * Roll Out Plan
+   
+   * Mary confirmed there are no more error messages.
+   
+   * 5 Users using IAD - no error messages seen.
+   
+   * MCG will kick off development work for not allowing parent indications to be selected unless the child indications are
+     selected and accurate. ETA for this is early 2022.
+     
+     * Mary will check in w/Kim (Manager of UM nurses) on roll out plan in phases.
+     
+     * Mary to confirm with Kim number of expected users.
+
+ * Mary will share templates used in workflow that is dropped in the notes section by 11/12.
+
+ * Duplicate Criteria Review Record (in Epic) discussion
+   
+   * Mary will repro duplicate criteria review case in TST and will send screenshot to MCG.
+
+ * MCG will continue to work on implementing MW’s feedback to roadmap.
+
+Backlog
+
+ * Summary notes configuration
+   
+   * Epic reported they add timestamps on the Epic UI (even if MCG does not send timestamps as part of our summary).
+   
+   * This is an Epic feature enhancement request that will require development work on their end.
+   
+   * The recommendation from MCG is to follow up with your Epic TS for updates and to continue to let them know you would like
+     this enhancement.
+   
+   * Natalie will continue to follow up with Jacob from Epic however we do not have a timeline for this work.
+
+
+
+
+PARTICIPANTS
+
+Name
+
+Role
+
+Company
+
+Attended
+
+
+
+Senior Program Manager
+
+MCG
+
+Yes
+
+
+
+Senior Product Manager
+
+
+
+Yes
+
+
+
+Senior Manager, Client Implementation
+
+
+
+No
+
+
+
+Senior Product Owner
+
+
+
+Yes
+
+
+
+Product Owner
+
+
+
+Yes
+
+
+
+Account Executive
+
+
+
+Yes
+
+
+
+Senior Software Engineer
+
+
+
+No
+
+
+
+Software Development Engineer
+
+
+
+No
+
+
+
+Senior Scrum Master
+
+
+
+No
+
+
+
+Manager Software Engineer
+
+
+
+Yes
+
+
+
+UA Technical Writer
+
+
+
+No
+
+
+
+Associate Director
+
+
+
+Yes
+
+
+
+Manager Clinical Informatics
+
+
+
+Yes
+
+Patti Lipson
+
+RN Manager, Case Management
+
+
+
+No
+
+Mary Lloyd
+
+Quality Improvement Performance, CC3 - Clinical Care Coordinators
+
+
+
+Yes
+
+Anna Moran
+
+Epic Analyst and Principal Trainer
+
+
+
+No
+
+Lori Vaillancourt
+
+Analyst, Epic Inpatient Clinical
+
+
+
+Yes
+
+
+
+
+SUCCESS CRITERIA
+
+Challenges
+
+Outcomes
+
+Requirements
+
+ * LOINC Code Alignment
+   
+   * During Kickoff call, we need to determine where the client is with LOINC code implementations. These codes are used by the
+     Synapse reasoning engine and should be updated for successful matching in IAD
+
+ * LOINC Codes are up to date in the client’s EPIC system
+
+ * Describe what's needed to achieve those results
+
+ * Note Type Configuration
+
+ * Determine where Mary Washington [https://mcg.lightning.force.com/lightning/r/Account/00130000000ROgmAAG/view] would like the
+   output saved. Epic Progress Note field and ICM or only to ICM.
+
+Have Notes in Case Management in Epic (similar to Stormont Vail).
+
+
+
+
+PROJECT TRACKER
+
+Milestone
+
+Owner
+
+Start
+
+Due
+
+Duration
+
+Status
+
+Action items
+
+Application request in App Orchard
+
+
+
+2/12/21
+
+2/12/21
+
+
+
+completeGreen
+
+
+
+145 complete Email client to request the IAD application using the following link: 146 complete Client request complete
+
+Kick-Off Meeting with Product demonstration
+
+Product
+
+2/3/21
+
+2/3/21
+
+
+
+CompleteGreen
+
+147 complete Meeting scheduled 148 complete Stakeholders identified 149 complete Epic Implementation Guide distributed 157
+complete Nova Epic Guide
+
+LOINC code Updates (LOINC Codes - Epic; Updates)
+
+Vendor Partner, Epic TS
+
+3/22/221
+
+04/02/2021
+
+10 Business Days (BD)
+
+CompleteGreen
+
+275 complete Confirm LOINC code updated 277 complete Determine where notes should be? - CM/UR similar to Stormont. 289 complete
+MCG to investigate if notes can be filed directly in Epic’s ‘UR’ form
+
+
+
+Provisioning of Client URLs
+
+, ,
+
+3/22/221
+
+3/22/21
+
+1 BD
+
+CompleteGreen
+
+150 complete Create client URLs 151 complete Create client configuration record
+
+Upgrade Edition Content and Version
+
+MCG
+
+4/1/21
+
+4/2/21
+
+1 BD
+
+CompleteGreen
+
+290 complete Schedule client for upgrade 291 complete Submit upgrade request.
+
+
+
+ICM Settings
+
+TSS,
+
+TBD
+
+TBD
+
+1 BD
+
+CompleteGreen
+
+282 complete Schedule Upgrade Indicia sites (TEST ETA 4/2) 285 complete TEST upgrade pending approval and admin settings from
+Lori. ETA 4/12. 286 complete Schedule Upgrade to PRD 280 complete Ensure configurations updated “UseAlternateEpisodeMatching
+Setting” in Epic changed to “TRUE”
+
+
+
+Implementation of URLs
+
+Development team & Client
+
+3/23/21
+
+4/05/21
+
+5/13/21
+
+10 BD
+
+CompleteGreen
+
+152 complete Implement URLs in TST 295 complete Medication Admin Errorsfound. 296 complete Epic to troubleshoot; rebuild and
+reconfigure new url in TST as of 5/13. 287 complete Implement URLs in Prod 294 complete Time Control
+
+Test
+
+
+
+4/06/21
+
+4/13/21
+
+5/13/21
+
+2.5 BD
+
+4 weeks (blocked due to configuration changes and Epic resolution.
+
+COMPLETEGreen
+
+263 complete Launch IAD in Test 278 complete Test LOINC code data. 299 complete Lori to work with Epic on getting procedures
+mapped (i.e TAVR) . 283 complete Upgrade to Indicia 13.0 and 25th Edition. 297 complete Epic to troubleshoot ERRORS in TST as of
+5/13. 298 complete Test Updated URL 284 complete Test notes integration - In process. Work around identified until Epic’s Aug
+release. 300 complete Lori and Kaitlin are working on identifying a different LOINC code to have the notes filed in a different
+location - currently note is filed under ‘progress note’. 264 complete Run Test Scenarios 265 complete Select GL Indication 266
+complete IAD/ICM Integration 267 complete Validate Success in TEST
+
+IAD in PRD
+
+
+
+4/09/21
+
+4/13/21
+
+2.5 BD
+
+COMPLETEGreen
+
+268 complete Launch IAD in PRD 269 complete Run Test Scenarios in PRD 270 complete Select GL Indication 271 complete IAD/ICM
+Integration 272 complete Validate Successful launch in PRD
+
+Coordination of Training
+
+
+
+4/14/21
+
+4/27/21
+
+10 BD
+
+CompletedGreen
+
+153 complete Identify trainer 292 complete There are 22 users who will need IAD training. 293 complete 3 Groups 154 complete
+Identify trainees 155 complete Schedule virtual training sessions 156 complete Work with client to make sure there are created for
+training purposes
+
+Go live
+
+
+
+TBD
+
+TBD
+
+1 BD
+
+CompleteGreen
+
+274 complete Go live TBD July 12th 301 complete TEST PT in PRD walkthrough July 12th
+
+ 
+

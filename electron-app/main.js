@@ -32,11 +32,12 @@ async function handleChat(prompt) {
   const context = matches.map(x => x.pageContent).join(' ').substring(0, 6000)
 
   const data = {
+    "model": "gpt-3.5-turbo",
     "messages": [
-        {"role": "system", "content": `You are a helpful assistant. Use the following context to anser the User's question. Context: ${context}`}, 
+        {"role": "system", "content": `You are a helpful assistant. Use the following context to anser the User's question. Context: ${context}`},
         {"role": "user", "content": prompt}
       ]
-  }  
+  }
 
   const response = await azure.chatCompletion(data)
 
@@ -52,7 +53,7 @@ const createWindow = () => {
       preload: path.join(__dirname, 'preload.js')
     }
   })
-  
+
   if(!process.defaultApp) {
     log.info('PAI: packaged')
     win.loadFile('index.html'); // prod
@@ -69,7 +70,7 @@ const createWindow = () => {
 
 function openWindow() {
   const mainWindow = createWindow();
-  
+
   globalShortcut.register('Control+Shift+I', () => {
     mainWindow.webContents.openDevTools()
   })
@@ -79,12 +80,16 @@ function openWindow() {
     const files = indexer.getFilenames(config.currentDir)
     mainWindow.webContents.send('dialog:reply', config.currentDir)
     mainWindow.webContents.send('dialog:filelist', files)
-    sessionId = indexer.LoadIndex(config.currentDir, sessionId)
+    try {
+      sessionId = await indexer.LoadIndex(config.currentDir, sessionId)
+    } catch (error) {
+      log.error(error)
+    }
   })
 
   ipcMain.on('dialog:openFolder', async () => {
     const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openDirectory']})
-    
+
     if (!canceled) {
       config.currentDir = filePaths[0]
       config.sessionId = indexer.saveIndex(config.currentDir)
@@ -92,12 +97,12 @@ function openWindow() {
       mainWindow.webContents.send('dialog:reply', config.currentDir)
 
       const files = indexer.getFilenames(config.currentDir)
-      mainWindow.webContents.send('dialog:filelist', files)  
+      mainWindow.webContents.send('dialog:filelist', files)
 
       if (needsIndexing(config.currentDir)) {
         await indexer.indexDirectory(config.currentDir, sessionId)
       }
-    }      
+    }
   })
 
   ipcMain.on('chat:completion', async (_, prompt) => {
@@ -106,16 +111,9 @@ function openWindow() {
     mainWindow.webContents.send('chat:response', response)
   })
 
-  ipcMain.on('fetch:searchTerm', async (_, {outputPath, searchTerm}) => {
-    
-    await indexer.handleFetch(mainWindow, outputPath, searchTerm, sessionId)
-    const files = indexer.getFilenames(outputPath)
-    mainWindow.webContents.send('dialog:filelist', files)
-  })
-
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
-  }) 
+  })
 }
 
 app.whenReady().then(() => {
@@ -133,10 +131,6 @@ async function main() {
   config = indexer.readConfig()
   currentDir = config.currentDir
   sessionId = config.sessionId
-
-  const {accessToken, expiresOn} = await azure.getAccessToken(config)
-  config.accessToken = accessToken
-  config.expiresOn = expiresOn
 
   indexer.writeConfig(config)
 

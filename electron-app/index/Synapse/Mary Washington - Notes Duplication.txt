@@ -1,0 +1,54 @@
+Ticket created to track: https://mcghealth.atlassian.net/browse/SYN-3795 [https://mcghealth.atlassian.net/browse/SYN-3795]
+
+Example from
+
+Example on
+
+Questions:
+
+ 1. what is the expected behavior here? When you say send "Note" vs. "Preview Note.", what is the expected behavior?
+
+ 2. Do ICM want data included in the blue rectangle (indications as selected in ICM), or do ICM only want the note IAD sent to ICM
+    (saved as a clinical note)
+
+Note Duplication meeting attended by
+
+2 options
+
+ 1. Indicia accepts the notes section
+    
+    1. Ideal solution - work to be done by Indicia
+    
+    2. Require the hotfix
+    
+    3. Remove PreviewNote from everywhere in the payload - Synapse work
+       
+       1. Note contains only calculator and additional notes
+
+ 2. IAD to send the user entered indication note (free text) as part of 'ClinicalSourceInput' - work to be done by Synapse
+    
+    1. Remove PreviewNote from everywhere in the payload
+       
+       1. Note contains only calculator and additional notes
+    
+    2. Update section/'ClinicalSourceInput' and outline/'ClinicalSourceInput'
+       
+       1. User entered indication note doesn't have a date => clarify this with indicia team
+
+Next Steps: Meet on Monday to decide on the priority and which option to choose . to schedule a meeting.
+
+
+
+Notes from meeting
+
+
+
+ * Discussed the above options and considered a third option for IAD to only send free text to ICM, which is not an ideal
+   solution, as user will miss the indication level free text.
+
+ * Agreed that Option 1 is ideal, however Indicia team is currently focusing on GA work.
+
+ * Option2 can be done as a short term fix and prioritize Option1.
+
+1 complete Next step: to discuss with and
+
