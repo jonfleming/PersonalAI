@@ -15,9 +15,7 @@ import TreeView from "@mui/lab/TreeView"
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
 import ChevronRightIcon from "@mui/icons-material/ChevronRight"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
-import SearchIcon from "@mui/icons-material/Search"
 import TreeItem from "@mui/lab/TreeItem"
-import Button from "@mui/material/Button"
 import PersonIcon from "@mui/icons-material/Person"
 import ModeEditIcon from "@mui/icons-material/ModeEdit"
 import SendIcon from "@mui/icons-material/Send"
@@ -397,15 +395,6 @@ export default function Sidebar() {
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
   const [showFetch, setShowFetch] = React.useState(false)
-
-  const showFetchDialog = () => {
-    if (!window.curdir) {
-      toast.error("Select a folder first.")
-      return
-    }
-
-    setShowFetch(true)
-  }
 
   const handleCancel = () => {
     setShowFetch(false)
