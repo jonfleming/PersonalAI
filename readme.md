@@ -4,7 +4,7 @@ Confluence-GPT was a project I created for getting answers from our Confluence p
 
 An app that uses the Atlassian API to read the content of Confluence pages.
 
-A LangChain loader that parses the pages and generates an in-memory vector store of the text embeddings from the Confluence content.
+A LangChain loader that parses the pages, generatestext embeddings from the Confluence content, and saves the embeddings to a Pinecone database.
 
 A Chat UI that lets you ask questions about the indexed content.
 
@@ -36,26 +36,70 @@ You can install Personal AI by downloading the latest setup.exe from the [Releas
 
 To make Confluence API calls you need to set a couple of environment variables.
 
-CONFLUENCE_USER=\<your-confluence-user-name\>
-
-CONFLUENCE_TOKEN=\<your-confluence-api-token\>
-
+``` cmd
+CONFLUENCE_USER=<your-confluence-user-name>
+CONFLUENCE_TOKEN=<your-confluence-api-token>
 CONFLUENCE_URL=https://mcghealth.atlassian.net/wiki
+```
 
 How to get your Confluence API Token [https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/)
 
 ## OpenAI API Access
 
-OPENAI_API_KEY=\<your-openai-api-key\>
+``` cmd
+OPENAI_API_KEY=<your-openai-api-key>
+```
 
 How to get you OpenAI API Key [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys)
+
+## Pinecone API Access
+
+``` cmd
+PINECONE_API_KEY=<your-pinecone-api-key>
+PINECONE_ENVIRONMENT=<your-pinecone-environment>
+PINECONE_INDEX=<your-pineconde-index>
+```
 
 ---
 
 ## How Vector Similarity Search works
 
-When pages are downloaded from Confluence they are broken up into chuncks and each chunck is turned into a vector using OpenAI's embedding API.  These vectors are store in a vector database (in this case it is actually an in-memory LangChain [MemoryVectorStore](https://js.langchain.com/docs/modules/indexes/vector_stores/integrations/memory)).
+When pages are downloaded from Confluence they are broken up into chuncks and each chunck is turned into a vector using OpenAI's embedding API.  These vectors are store in a vector database (Pinecone).
 
 When you type a question into chat, we use the embedding API again to turn your question into a vector.  We can then perform a query using `MemoryVectorStore.similaritySearch` which will return all of the Confluence chunks that are near your question in vector space.
 
 This context is then added to the question that gets sent as the prompt to ChatGPT.
+
+## To Run From Source
+
+1. Clone the repo:
+
+  ``` cmd
+  git clone https://github.com/jonfleming/PersonalAI
+  ```
+  
+2. Copy and edit sample.env
+
+  ``` cmd
+  copy PersonalAI\electron-app\sample.env PersonalAI\electron-app\.env
+  ```
+
+> Edit `PersonalAI\electron-app\.env` and put in you API keys
+
+3. Run the React frontend:
+
+  ``` cmd
+  cd PersonalAI\react-app
+  npm install
+  npm start
+  ```
+
+4. Run the Electron app (in a separate command prompt):
+
+  ``` cmd
+  cd PersonalAI\electron-app
+  npm install
+  npm start
+  ```
+  
+This should open your browser to log into Azure.
