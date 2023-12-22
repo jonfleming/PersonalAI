@@ -1,0 +1,163 @@
+OVERVIEW
+
+Project lead
+
+
+
+Customer
+
+Mary Washington
+
+Go live date
+
+July 12th, 2021
+
+Status
+
+Post Go Live Support
+
+Agenda/Notes
+
+Agenda
+
+ * Discuss data overload issue
+
+
+
+ * The Synapse team will investigate internally how to resolve the increased clinical data issue and code to display data not
+   required.
+
+ * MCG to sync with Epic and coordinate meeting with MW + MCG + Epic w/a request for MW to demo the repeated name (no clinical
+   data displaying) issue.
+
+
+PARTICIPANTS
+
+Name
+
+Role
+
+Company
+
+Attended
+
+
+
+Senior Program Manager
+
+MCG
+
+Yes
+
+
+
+Dev Manager
+
+
+
+No
+
+
+
+Technical Support Analyst
+
+
+
+Yes
+
+
+
+Product Manager
+
+
+
+Yes
+
+
+
+Manager, Clinical Informatics
+
+
+
+
+
+
+
+Senior Dev. Engineer
+
+
+
+No
+
+
+
+Senior Manager, Client Implementation
+
+
+
+No
+
+
+
+Account Executive
+
+
+
+Yes
+
+
+
+Senior Care Strategy Consultant
+
+
+
+Yes
+
+
+
+Implementation Analyst II
+
+
+
+Yes
+
+Mary Lloyd
+
+Quality Improvement Performance, CC3 - Clinical Care Coordinators
+
+Mary Washington
+
+Yes
+
+Lori Vaillancourt
+
+Analyst, Epic Inpatient Clinical
+
+Mary Washington
+
+Yes
+
+Dr. Saberinia Hooman
+
+Medical Director of Utilization, Clinical Documentation and Care Coordination
+
+Mary Washington
+
+No
+
+Patti Lipson
+
+Manager Case Management
+
+Mary Washington
+
+Yes
+
+Kaitlin Pankratz
+
+Epic TS
+
+Epic
+
+No
+

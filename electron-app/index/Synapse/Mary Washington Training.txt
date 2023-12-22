@@ -1,0 +1,426 @@
+Introduction by Mary:
+
+ * MCG is a team of experts. They’re a proven team that works with payers and providers and is now working with us to make sure
+   we’re doing things the best way. IAD is a really cool tool with lots of features and will minimize the time spent in reviews.
+   All the criteria drops in and helps with efficiency with initial reviews.
+
+ * Current state: Confusion among the teams. Seasoned case managers vs new case managers. Back in 2019, MCG brought best practice
+   to the table. The previous PA deviated from the best practice and we saw a whole progression of notes and clinical information
+   that sometimes doesn't support MCG criteria. Some of the notes sent to payers doesn't tell the real story. If we’re not using
+   the best process to document, we don't have the best processes in place for reimbursement.
+
+ * We’ve done so much work with the IAD tool and have refined the processes so the tool is working well.
+
+Demo of IAD by Mary:
+
+ * The only thing that IAD does not have is the RRG guidelines. Therefore, we will always start by looking at inpatient.
+
+ * Demoed selecting indications for Pneumonia M-282
+   
+   * Added clinical notes
+   
+   * Added free text “additional” notes
+
+ * If you decide to go back and select a different guideline your notes disappear. Once you start your documentation, you don't
+   want to change guidelines. Do all your searching up front.
+   
+   * Idea to add an “are you sure” button if users try to select a new guideline after documenting indications.
+
+ * Look how beautiful it is (referring to the indication level notes and how it aligns with the indications/criteria)
+
+ * Look how awesome that it is.. That is very helpful (referring to calculator)
+
+Demo of continued stay and discharge criteria
+
+Demo of IAD for Myocardial Infarc in-patient admission
+
+ * Documentation completed quickly <5 min
+
+ * Showcased how IAD highlights (problem list highlight) and indication was selected.
+
+ * Looked through labs for troponin levels
+   
+   * Did not use the search box, but should have
+   
+   * Mentioned that she typically looks through EPIC for labs because it’s easier to read there
+   
+   * Had to add troponin values manually in indication notes
+
+ * User initially looked in EPIC for notes, and saw that the progress note was also in IAD. But may still be easier to read in
+   EPIC
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+
+
+ * Mary showing IAD workflow and trained users that if they add notes, they will lose all their data if they click to a new
+   guideline:
+   
+   * “That’s HORRIBLE” was one reaction.
+   
+   * Similar to above - suggest addition of a button to warn users before data is erased on GL change.
+
+ * Mary unable to edit age in Calculator - age was preloaded.:
+
+ * 
+
+ * I’ll tell you, after using this (ICM) for a year and a half, and now using IAD, when you go back to IAD and it just pulls the
+   labs over, I still find myself still going over to the lab section because of how its organized and how my brain works.
+
+ * Now that the data is flowing to IAD, It will highlight and pull that information over under the tachypnea and flow into your
+   note.
+
+ * This is an electronic tool, you guys are the brains, you still have to go in and validate.
+
+ * Cardiac patient review:
+   
+   * Direct admit
+   
+   * Acute HF Review
+     
+     * If we think about this, we want to know why the patient is here.
+     
+     * Read Physician notes
+       
+       * If we look down at our impression it is acute on chronic congestive HF.
+       
+       * Swelling
+       
+       * Tightness
+       
+       * Right lower
+       
+       * Tachycardia
+       
+       * Rhythm is irregular
+       
+       * Denies any known history of CHF
+       
+       * Clinically he’s presenting with CHF
+     
+     * Navigated to the Lab tab in Epic
+       
+       * Took look at creatine and GFR
+       
+       * What do you think of the new Epic view??
+         
+         * I DONT LIKE IT
+         
+         * Labs show everything in the last 21 days - “Lab 21 Day” is the name of the view.
+   
+   * Created UR note
+     
+     * UR Tab
+     
+     * New
+     
+     * Create Note
+     
+     * 
+
+Ste time of review
+
+ * Launched IAD
+
+ * Pulled in Dx
+   
+   * Reviewed Inpatient
+   
+   * Left IAD to go back and look at vitals in epic to see the trends
+     
+     * 
+   
+   * Went to Cardiology tab to review notes/ekg impressions
+   
+   * Documented “First episode with no prior history of heart failure:
+   
+   * Opened physician notes in IAD and copied/pasted data to the indication note
+     
+     * Issues when trying to edit the note after typing text.
+     
+     * Mary could not edit, delete, copy, paste etc.
+     
+     * Asked Mary to report if this is still happening when they are back at their workstations. This seems connected to the fact
+       that they are all in one room working on a connection from the basement of the hospital.
+   
+   * Copied and pasted cardiology notes - Impressions
+   
+   * Could not search for or filter lab results
+
+ * Click “Save in IAD”
+
+ * Come over, click on Utilization review tab → New → Indicia → Exit → and it flows right over.
+
+ * After you done that and the box is there, do you have to go to IAD and exit? or do you leave it alone?
+
+Test patient:
+
+ * Added note
+
+ * IAD
+
+ * I50.9 search
+
+ * Heart failure
+
+ * Clicked indication to add note: Per cardiology note: no prior history of CHF
+
+ * Additional notes
+
+ * Save
+
+ * UR
+
+ * New Indicia
+
+ * Exit - using the red x
+
+Sometimes on the floor you get interrupted, can you go back in?
+
+ * Mary discussed pressing save so the data flows to ICM and using ICM for all additional documentation/edits
+
+That is IAD. What do you think?
+
+ * For IAD, there has to be a diagnosis? You cant use general?
+
+ * Mary showed a general case via edit episode in ICM
+
+ * Then launched to IAD to demo
+
+ * Couldn't find General Inpatient guideline. Expected the ability to see General Admission Criteria.
+
+Regarding C3s (new role at MW) not necessarily MCG specific:
+
+ * There was resistance, and nobody likes change. In the fall, Covid was ramping up. But now, things are calming down, we're
+   getting into the spring, I think people will be more receptive. After we tweak the C3s to be more specific and explain to them
+   why we need them to do this work, the time has come where they will be more receptive.
+
+ * You're asking a bedside nurse to open 3 programs, answer the phone, care for a patient. it’s a lot.
+
+Discussing getting to met:
+
+ * If you can get the boxes to check and they’re green, click them and move one. I dont care if its a soft meet or hard meet. If
+   you can get it to turn green and support what you click, if there's one thing, that’s enough!
+
+Patient meets obs (workflow) not MCG specific.
+
+ * You know how we used to document obs 2 a day? Stop that. You are going to look at your obs case, and by nature of SNAP, you are
+   doing an obs review. If its a teetering patient, hold off on your acutal re-view until 2pm until you have results back. AND,
+   its still early enough to make your referral to the team as needed if they convert.
+
+ * We want standardization. that is the goal of this meeting! To get standardization. We are eating bite size pieces.
+
+
+
+
+
+ * Heart Failure M-190
+   
+   * Use the data on the right hand side so you don’t need to go back to Epic to look at this info
+   
+   * What MCG labs and vitals don’t show that EPIC has:
+     
+     * Abnormal values highlighted in red
+     
+     * Baseline information is available
+     
+     * Trending information (as a snapshot it is probably visually informative & easy to understand)
+     
+     * Example data of creatinine progressive
+   
+   * While Mary was demonstrating how to select parents in indication tree (and explaining that they need to do this step)
+     
+     * Comment from trainee: Why doesn’t it automatically select parents, in theory it should?
+     
+     * Mary - they are working on it
+   
+   * Were you all here when MCG crashed and burned yesterday?
+     
+     * Outage for all of their clients, 1.5 hours
+
+ * C3 practice - first time review - LIVE prod patient
+   
+   * First thing was to review clinical notes in IAD
+   
+   * Labs: CMP (Comprehensive Metabolic Panel)
+     
+     * Can’t see historical so looking at Labs in Epic
+   
+   * Hypertension M-197 changed to Renal Failure, Acute (no calculator)
+     
+     * It matched on second node (double check this because I saw pediatric in text of indication)
+       
+       * It looked like there was a match on the second node, I don’t think this should have happened because it’s for peds?
+     
+     * Looked for more clinical notes in Epic
+     
+     * Spent several minutes calculating eGFR
+     
+     * Added 2-fold rise data manually on ‘2-fold or more rise in serum creatinine from baseline’
+       
+       * Cr 2.8 improved to 2.7 baseline 1.0 rise since 2017 (was this the correct place for this note?)
+     
+     * Happy with blood pressure values and highlighting automatically
+       
+       * “See, those suggestions in IAD are super helpful” Mary
+   
+   * Put entire Diagnostic into Additional notes (Nephrology consult notes)
+     
+     * Someone asked if this was too much info, but Mary said it’s fine
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Why are we here today?
+
+ * Lets look at our current state. We have old CMs, new CMs, a mixture and everyone has a different way of doing things.
+
+ * Back in 2019, we partnered with MCG. MCG is an industry leader in guidelines and have developed workflows and innovative tools
+   to get information to the payers to have the best outcomes - reimbursement.
+
+ * MCG implemented and before we got off the ground, we had care logistics come in and PAs came in and wanted to see observation
+   reviews done 2/day. The way we are doing it is not best practice. How could we possibly look at that today and make sense of
+   why we're doing that today (all the notes). If CMS came in and did an audit and we show them all the clinical notes, what is
+   that really telling us? When we follow the best practice workflow and we can show observation documentation or failed obs
+   criteria - and what if they meet inpatient, care day 1, 2, 3 etc and show a beautiful audit trail.
+
+ * We got blown off track and were still seeing a lot of clinical notes and everyone is doing things their own way. So we need
+   standardization.
+
+Initial reviews
+
+ * We are going to start doing these in an innovative tool that’s super cool, call Indicia for Admission Documentation. What's the
+   difference between regular indicia? It pulls in dx, it puts blue boxes around criteria to bring your eyes to see the criteria.
+   All the clinical data is on the right hand side. All the back and fourth is going to be limited. MCG says that it can take
+   reviews down to minutes. If you think about UR nurses doing 30 charts a day, that’s a lot of saved time!
+
+Feedback from frontline staff on Indicia Continued stay:
+
+ * Fantastic. You know the P3s are SO general that there is talk about forming a sub committee to start marrying the P3s with care
+   day milestones because they are so specific. Care logistics is progressive driven where MCG is specific to milestones to check
+   off and that is where we’re heading
+
+MCG is a fantastic partner. We worked with them closely to build and enhance IAD.
+
+
+
+Mary demonstrated documentation examples:
+
+
+
+Kimberly joined the discussion:
+
+ * To recap on our goals: Today, we’re going to introduce you to MCG’s IAD - Artificial intelligence tool to starndardize how
+   we’re documenting. We’re also going to look at obs documentation and failed discharge criteria.
+
+IAD Demo:
+
+ * It really clues us in on what to look for and what to pay attention to.
+
+ * Mary demoed with a test patient with no clinical data (IAD Clinical fields were empty). She toggled between a patient summary
+   (image above) and IAD to manually populate the indication notes. This workflow took 15 minutes. Could reference as a baseline
+   for time to document without IAD/Synapse.
+
+ * Mary mentioned that the one thing she does go back to Epic for is the comprehensive vital signs flow sheet and the
+   labs/baseline/trend view.
+
+ * Mary discussed how data flows into IAD and is added to the indications - “Its a lot more robust”
+
+ * Demonstrated how toggling between guidelines will remove any free text notes that users entered.
+   
+   * How does this work in ICM? I would imagine its the same?
+
+ * Let me show you something with the calculators which is awesome
+   
+   * Pneumonia/PSI demo
+   
+   * Text boxes seem to be working fine today (last week they were freezing)
+   
+   * In normal indicia, you have to document the calculators manually, but in IAD, you just hit “add to note” and its all
+     documented! it’s all there for you!
+     
+     * Demoed editing the calculator values and updating the Calc note.
+
+ * See how MELD score isnt there? You have to go to md calc on google to compute the score.
+   
+   * Synapse - Add Remaining Calculators to IAD UI (does not include codification)
+
+ * Demoed tree climbing and how you need to select appropriate criteria for the parent indications to be selected
+   
+   * “MCG has done a fabulous job developing this tool to really enhance what we do”
+
+Documented in IAD
+
+ * Created UR note
+
+ * Launched IAD - Manually searched for the Angina GL
+   
+   * Clicked back to Epic to view note
+   
+   * Team member asked if she could look at the note in IAD
+   
+   * Mary navigated back to IAD and reviewed the note
+   
+   * copied and pasted data
+   
+   * Ran into the 250 indication note character limit a few times. Transitioned her documentation to the “Additional Notes'
+     section
+
+
+
+
+
+UI/UX Enhancement Ideas:
+
+ * More detailed lab and vitals view
+   
+   * abnormal values, trends (spark lines) , colors for signifiers
+
+Calculator:
+
+ * Demo - Mary almost clicked Reset (she hovered on it after selecting check boxes)
+
+Angina GL
+
+ * Ignored CTA to click a diagnosis, did a search right away
+
+ * No auto highlights from IAD
+
+ * They expected this to be inpatient prior to launching
+
+ * Now looking for how to get to “Met” (evaluating indications)
+
+ * Found an indication and adding notes
+
+ * Found cardiac cath diagnostic report
+   
+   * Couldn’t find a findings section
+   
+   * Huge block of text only - a narrative section
+   
+   * Added a section from this for the indication
+
+ * Searching Clinical notes to add support for “Crescendo worsening of symptoms (ie, acutely changing)”
+   
+   * Pasting from notes was too big for indication note
+   
+   * Deleted and added H&P snippet (indication for procedure) to additional Notes
+
+ * Saved
+
+ * EPIC added/edit UR note
+
+Summary from Mary as a wrap-up
+
+ * Use the right side as much as possible
+
+ * If you select a new GL your notes will be deleted
+
+ * Use the calculator
+
+ * Make sure it says met
+
+ * Children selection selects parents
+
+ * Don't write a book

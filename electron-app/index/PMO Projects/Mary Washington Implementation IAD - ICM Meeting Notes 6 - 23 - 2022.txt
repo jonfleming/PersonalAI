@@ -1,0 +1,193 @@
+OVERVIEW
+
+Project lead
+
+
+
+Customer
+
+Mary Washington
+
+Go live date
+
+July 12th, 2021
+
+Status
+
+Post Go Live Support
+
+Agenda/Notes
+
+Agenda
+
+ * Natural Language Processing (NLP) Mock Ups
+   
+   * This feature (NLP) will read over physician’s note and pull over to indications. Dx reports and physician notes will find it,
+     highlight and pull it over. By default, everything will be checked, the user can deselect data (checkboxes) they do not want
+     to have pulled over to Indicia and the payer summary.
+   
+   * Team [ED C3]will really appreciate this, I’m going to say yes” -Mary L..
+   
+   * Abbey will provide an update on NLP development in 2 months (ETA end of August).
+
+ * Two pieces of documentation from ICM pulled to IAD under a different user (from initial user who documented (Matthew). - ticket
+   submitted.
+
+ * Intermittent failures for documentation Error not flowing into ICM- the team is investigating.
+
+Action Items
+
+ * will f/u with the team on why the calculator (after CURB score) is not displaying for the gl “PNA: OBS CARE OC-030). -Resolved
+   and in PROD.
+
+ * Kelley and Cathy will be on site on 7/28.
+
+ * will sync to work on values story.
+
+
+PARTICIPANTS
+
+Name
+
+Role
+
+Company
+
+Attended
+
+
+
+Senior Program Manager
+
+MCG
+
+Yes
+
+
+
+Senior Product Manager
+
+
+
+No
+
+
+
+Dev Manager
+
+
+
+No
+
+
+
+Technical Support Analyst
+
+
+
+Yes
+
+
+
+Product Manager
+
+
+
+No
+
+
+
+Senior Product Owner
+
+
+
+No
+
+
+
+Senior Dev. Engineer
+
+
+
+No
+
+
+
+Senior Manager, Client Implementation
+
+
+
+No
+
+
+
+Account Executive
+
+
+
+Yes
+
+
+
+Solution Delivery Project Manager
+
+
+
+Yes
+
+
+
+Senior Care Strategy Consultant
+
+
+
+Yes
+
+
+
+Implementation Analyst II
+
+
+
+Yes
+
+Mary Lloyd
+
+Quality Improvement Performance, CC3 - Clinical Care Coordinators
+
+Mary Washington
+
+Yes
+
+Lori Vaillancourt
+
+Analyst, Epic Inpatient Clinical
+
+Mary Washington
+
+No
+
+Dr. Saberinia Hooman
+
+Medical Director of Utilization, Clinical Documentation and Care Coordination
+
+Mary Washington
+
+No
+
+Patti Lipson
+
+Manager Case Management
+
+Mary Washington
+
+No
+
+Kaitlin Pankratz
+
+Epic TS
+
+Epic
+
+No
+

@@ -1,0 +1,201 @@
+2flatpipe
+
+
+OVERVIEW
+
+Project lead
+
+
+
+Customer
+
+Mary Washington
+
+Go live date
+
+July 12th, 2021
+
+Status
+
+Post Go Live Support
+
+Agenda/Notes
+
+Development Enhancement and Resolution Updates
+
+ * Duplicate CRRs/reviews” observed in Epic CCM-
+   
+   1. Example: User A entered first review in ICM; User B updates review and enters 2nd note on the same patient in ICM. When User
+      B saves their review in ICM and exits, User A’s review was duplicated, with User B as the reviewer a duplicate review is
+      created.
+      
+      1. Users are selecting “create new episode” instead of “update episode” after IAD CRR has been created in Epic.
+      
+      2. Users should select “create new episode” when IAD review has been completed, but once Clinical Indications for Admission
+         CRR is created in UR tab → select “update episode”
+   
+   2. so will sync with Sandy Z. on having users use the ‘edit episode’ vs. ‘create new episode’ icon to update the admission
+      encounter in the next refresher training.
+   
+   3. Mary will sync w/Kim on refresher dates for edits before the holidays
+
+ * Screenshot from Mary "met" in Indicia and "not met" in Epic item
+   
+   * Mary and team will continue to monitor and send MCG examples when/if this occurs.
+
+ * UR tab is displaying both Notes and Preview notes creating duplicate data.
+
+ * MCG completed the development work for the manual and automatic indications met enhancement.
+   
+   * Change will occur in IAD ONLY and not ICM. - No upgrades needed.
+   
+   * ETA for C3 refresher session (to include edit training; IAD + enhancements) beginning of ?January 2022.
+   
+   * Chamnan will sync w/Sandy on training requests.
+
+Backlog
+
+ * Summary notes configuration
+   
+   * Epic reported they add timestamps on the Epic UI (even if MCG does not send timestamps as part of our summary).
+   
+   * This is an Epic feature enhancement request that will require development work on their end.
+   
+   * The recommendation from MCG is to follow up with your Epic TS for updates and to continue to let them know you would like
+     this enhancement.
+   
+   * Natalie will continue to follow up with Jacob from Epic however we do not have a timeline for this work.
+
+
+
+
+PARTICIPANTS
+
+Name
+
+Role
+
+Company
+
+Attended
+
+
+
+Senior Program Manager
+
+MCG
+
+Yes
+
+
+
+Senior Product Manager
+
+
+
+Yes
+
+
+
+Senior Product Owner
+
+
+
+Yes
+
+
+
+Product Owner
+
+
+
+Yes
+
+
+
+Account Executive
+
+
+
+Yes
+
+
+
+Senior Scrum Master
+
+
+
+Yes
+
+
+
+Manager Software Engineer
+
+
+
+Yes
+
+
+
+Associate Director
+
+
+
+Yes
+
+
+
+Technical Support Analyst
+
+
+
+Yes
+
+
+
+Manager Clinical Informatics
+
+
+
+Yes
+
+Mary Lloyd
+
+Quality Improvement Performance, CC3 - Clinical Care Coordinators
+
+Mary Washington
+
+Yes
+
+Lori Vaillancourt
+
+Analyst, Epic Inpatient Clinical
+
+Mary Washington
+
+Yes
+
+Dr. Saberinia Hooman
+
+Medical Director of Utilization, Clinical Documentation and Care Coordination
+
+Mary Washington
+
+Yes
+
+Jacob Spoelstra
+
+Software Dev, Clinical Case Management
+
+Epic
+
+Yes
+
+Kaitlin Pankratz
+
+Technical Services, Clinical Documentation
+
+Epic
+
+Yes
+

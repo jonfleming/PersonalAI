@@ -1,0 +1,75 @@
+ATTENDEES:
+
+
+
+
+PROBLEM DESCRIPTION:
+
+SoF customers are running into issues when their configuration is wrong. Example scenarios are mary Washington documenting in the
+ICM test site instead of prod. When the issue comes to TSS and SEAD engineers spend time assuming this is software issue. So
+effort is not well spent. How can we avoid that.
+
+Other customers experienced this problem: Maine Health, Mary Washington.
+
+
+TIMELINE:
+
+Date Time
+
+Event
+
+Gap Identified/ Change proposed
+
+
+
+Mary Wa went live with ICM SoF. Tenant Id and Fhir Id are not updated.
+
+Epic implementation guide has gaps. Tenant Id and Fhir Id are not mentioned to be updated.
+
+
+
+Can we get a snapshot the FDI configuration?
+
+Secrets might be shared in the snapshot.
+
+
+
+
+
+Client email stating the problem that they are not able to see the reviews from ICM to Epic.
+
+
+
+
+
+Implementation replied on configuration settings. We were not able to find the issue here because the customer overlooked the
+details.
+
+
+
+
+
+TSS got notified. Interface logs are missing the information for documentation requests in PROD.
+
+
+
+
+
+ICM Team got notified. Able to identify root cause.
+
+Having no logs should indicate that there is a wrong configuration.
+
+
+
+Product and Implementation confirmed with customer that tenant Id is wrong
+
+
+
+
+DECISIONS:
+
+1 complete Raise Epic ticket to update ICM Tenant Id and Fhir Id on Epic side. 2 complete Encourage the client to add the FDI
+configuration to the TSS ticket and Implementation guide. Mark 3/22/23 - adding this to the implementation guides falls to the
+Product/Writers teams. I worked with our teams to add check items for FDI elements to the SOF upgrade agendas and TaskRay project
+tasks lists. 3 incomplete Explore a way to eliminate the prod data coming into test data based on source and environment. Long
+term. Create the Jira ticket to track.

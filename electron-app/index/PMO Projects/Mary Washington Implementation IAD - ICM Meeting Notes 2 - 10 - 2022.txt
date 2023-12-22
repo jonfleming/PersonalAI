@@ -1,0 +1,206 @@
+OVERVIEW
+
+Project lead
+
+
+
+Customer
+
+Mary Washington
+
+Go live date
+
+July 12th, 2021
+
+Status
+
+Post Go Live Support
+
+Agenda/Notes
+
+Training Dates
+
+ * to send dates to Mary for Training tomorrow morning.
+
+
+
+
+PARTICIPANTS
+
+Name
+
+Role
+
+Company
+
+Attended
+
+
+
+Senior Program Manager
+
+MCG
+
+No
+
+
+
+Director Program Managment
+
+MCG
+
+Yes
+
+
+
+Senior Product Manager
+
+
+
+Yes
+
+
+
+Senior Product Owner
+
+
+
+Yes
+
+
+
+Product Owner
+
+
+
+Yes
+
+
+
+Account Executive
+
+
+
+Yes
+
+
+
+Senior Scrum Master
+
+
+
+No
+
+
+
+Solution Delivery Project Manager
+
+
+
+No
+
+
+
+Senior Care Strategy Consultant
+
+
+
+Yes
+
+
+
+Implementation Analyst
+
+
+
+Yes
+
+
+
+Manager Software Engineer
+
+
+
+No
+
+
+
+Associate Director
+
+
+
+No
+
+
+
+Manager Clinical Informatics
+
+
+
+Yes
+
+
+
+Clinical Educator
+
+
+
+Yes
+
+Mary Lloyd
+
+Quality Improvement Performance, CC3 - Clinical Care Coordinators
+
+Mary Washington
+
+Yes
+
+Lori Vaillancourt
+
+Analyst, Epic Inpatient Clinical
+
+Mary Washington
+
+Yes
+
+Dr. Saberinia Hooman
+
+Medical Director of Utilization, Clinical Documentation and Care Coordination
+
+Mary Washington
+
+No
+
+Patti Lipson
+
+Manager Case Management
+
+Mary Washington
+
+No
+
+
+
+Observations Reported
+
+Resolution
+
+Status
+
+ * Users getting an error in the Test Environment in Epic (Configuration Item)
+
+ * Lori opening a ticket with Epic this afternoon
+
+Open
+
+ * Intermittent issues when launching ICM after documenting in ICM
+
+ * MCG has entered a suppor ticket to investigate
+
+In Progress
+
+ * Mary to send Abbey/Rita the list of attendees for Mary Washington moving forward
+
+
+
+Open
