@@ -117,19 +117,14 @@ function writeConfig(config) {
 }
 
 async function createIndex() {
-  if (process.env.INDEX_TYPE === 'memory') {
-    const embeddings = new xenova()
-    vectorStore = new MemoryVectorStore(embeddings)
-  } else {
-    const client = new PineconeClient()
-    await client.init({
-      apiKey: process.env.PINECONE_API_KEY,
-      environment: process.env.PINECONE_ENVIRONMENT,
-    });
-    const pineconeIndex = client.Index(process.env.PINECONE_INDEX);
-    const embeddings = new OpenAIEmbeddings()
-    vectorStore = await PineconeStore.fromExistingIndex(embeddings, { pineconeIndex });
-  }
+  const client = new PineconeClient()
+  await client.init({
+    apiKey: process.env.PINECONE_API_KEY,
+    environment: process.env.PINECONE_ENVIRONMENT,
+  });
+  const pineconeIndex = client.Index(process.env.PINECONE_INDEX);
+  const embeddings = new OpenAIEmbeddings()
+  vectorStore = await PineconeStore.fromExistingIndex(embeddings, { pineconeIndex });
 }
 
 async function LoadIndex(directoryPath, sessionId) {
