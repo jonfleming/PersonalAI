@@ -34,6 +34,8 @@ async function handleChat(prompt) {
 
   const matches = await indexer.similaritySearch(prompt, sessionId)
   const context = matches.map(x => x.pageContent).join(' ').substring(0, 6000)
+  const reference = matches.slice(0, 3).map(match => match.metadata.source).join('\n')
+
   log.info('context:', context)
 
   const data = {
@@ -44,7 +46,10 @@ async function handleChat(prompt) {
       ]
   }
 
-  const response = await azure.chatCompletion(data)
+  let response = await azure.chatCompletion(data)
+  response += `\n\nReferences:\n${reference}`
+
+  log.info('response:', response)
 
   return { prompt, completion: response }
 }
