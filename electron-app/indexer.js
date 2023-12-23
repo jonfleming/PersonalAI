@@ -22,6 +22,7 @@ const azure = require('./azure-rest-api')
 require('dotenv').config()
 
 const fileExtensions = ['.txt', '.xslx', '.docx', '.pdf', '.csv', '.html']
+const indexIni = 'index.ini'
 const spaces = {}
 let vectorStore = null
 
@@ -44,17 +45,14 @@ async function similaritySearch(prompt, sessionId) {
 }
 
 async function indexDirectory(directoryPath, sessionId) {
-  if (!vectorStore) {
-    await createIndex()
-  }
+  await createIndex()
 
   const loader = new DirectoryLoader(directoryPath, {
       '.txt':  (path) => new TextLoader(path),
       '.csv':  (path) => new CSVLoader(path, 'text'),
       '.pdf':  (path) => new PDFLoader(path),
       '.docx': (path) => new DocxLoader(path),
-      '.xlsx': (path) => new UnstructuredLoader(path),
-      '.html': (path) => new UnstructuredLoader(path),
+      '.html': (path) => new TextLoader(path),
       '.md':   (path) => new TextLoader(path),
       },
   )
@@ -121,6 +119,10 @@ function writeConfig(config) {
 }
 
 async function createIndex() {
+  if (vectorStore) {
+    return
+  }
+
   const client = new PineconeClient()
   await client.init({
     apiKey: process.env.PINECONE_API_KEY,
@@ -133,7 +135,7 @@ async function createIndex() {
 
 async function LoadIndex(directoryPath, sessionId) {
   log.info('Loading index...', directoryPath)
-  const indexFile = path.join(directoryPath, 'index.ini')
+  const indexFile = path.join(directoryPath, indexIni)
 
   if (!vectorStore) {
     await createIndex()
@@ -153,8 +155,8 @@ async function LoadIndex(directoryPath, sessionId) {
 }
 
 function saveIndex(directoryPath) {
-  const iniFile = path.join(directoryPath, 'index.ini')
-  log.info('Saving index...', directoryPath)
+  const iniFile = path.join(directoryPath, indexIni)
+  log.info(`Saving ${indexIni}`, directoryPath)
 
   if (fs.existsSync(iniFile)) {
     const index = ini.parse(fs.readFileSync(iniFile, 'utf-8'))
