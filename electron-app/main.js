@@ -34,7 +34,7 @@ async function handleChat(prompt) {
 
   const matches = await indexer.similaritySearch(prompt, sessionId)
   const context = matches.map(x => x.pageContent).join(' ').substring(0, 6000)
-  console.log('context:', context)
+  log.info('context:', context)
 
   const data = {
     "model": "gpt-3.5-turbo",
@@ -128,11 +128,11 @@ function openWindow() {
   })
 
   ipcMain.on('chat:completion', async (_, prompt) => {
-    console.log('chat:completion', prompt)
+    log.info('chat:completion', prompt)
     const response = await handleChat(prompt)
     response.id = requestId++
     mainWindow.webContents.send('chat:response', response)
-    console.log('chat:response', response)
+    log.info('chat:response', response)
   })
 
   app.on('activate', () => {
