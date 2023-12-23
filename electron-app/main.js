@@ -14,11 +14,14 @@ require('update-electron-app')({
 
 let requestId = 0
 let currentDir = './index'
-let sessionId = `${Date.now()}`
+let sessionId = ''
 let config = { currentDir, sessionId }
+let handlingInit = false
+let handlingOpenDialog = false
+let mainWindow = null
 
 function needsIndexing(currentDir) {
-  const indexFile = path.join(currentDir, 'index.json')
+  const indexFile = path.join(currentDir, 'index.ini')
 
   return !fs.existsSync(indexFile)
 }
@@ -69,40 +72,57 @@ const createWindow = () => {
 }
 
 function openWindow() {
-  const mainWindow = createWindow();
+  mainWindow = createWindow();
 
   globalShortcut.register('Control+Shift+I', () => {
     mainWindow.webContents.openDevTools()
   })
 
   ipcMain.on('init:filelist', async () => {
+    if (handlingInit) {
+      return
+    }
+
+    if (currentDir === process.cwd()) {
+      log.info(`Triggering SelectFolder`)
+      handlingInit = true
+      mainWindow.webContents.send('init:filelist')
+
+      return
+    }
+
+    handlingInit = true
     log.info(`Sending filelist: ${config.currentDir}`)
-    const files = indexer.getFilenames(config.currentDir)
-    mainWindow.webContents.send('dialog:reply', config.currentDir)
-    mainWindow.webContents.send('dialog:filelist', files)
+    selectDirectory(config.currentDir)
+
     try {
       sessionId = await indexer.LoadIndex(config.currentDir, sessionId)
     } catch (error) {
       log.error(error)
     }
+
+    handlingInit = false
   })
 
   ipcMain.on('dialog:openFolder', async () => {
+    if (handlingOpenDialog) {
+      return
+    }
+
+    handlingOpenDialog = true
     const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openDirectory']})
 
     if (!canceled) {
-      config.currentDir = filePaths[0]
-      config.sessionId = indexer.saveIndex(config.currentDir)
-      indexer.writeConfig(config)
-      mainWindow.webContents.send('dialog:reply', config.currentDir)
-
-      const files = indexer.getFilenames(config.currentDir)
-      mainWindow.webContents.send('dialog:filelist', files)
+      selectDirectory(filePaths[0])
 
       if (needsIndexing(config.currentDir)) {
         await indexer.indexDirectory(config.currentDir, sessionId)
+      } else {
+        await indexer.createIndex()
       }
     }
+
+    handlingOpenDialog = false
   })
 
   ipcMain.on('chat:completion', async (_, prompt) => {
@@ -114,6 +134,16 @@ function openWindow() {
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
+}
+
+function selectDirectory(filepath) {
+  const files = indexer.getFilenames(filepath)
+  mainWindow.webContents.send('dialog:reply', filepath)
+  mainWindow.webContents.send('dialog:filelist', files)
+
+  config.currentDir = filepath
+  config.sessionId = indexer.saveIndex(config.currentDir)
+  indexer.writeConfig(config)
 }
 
 app.whenReady().then(() => {
