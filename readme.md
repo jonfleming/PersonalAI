@@ -1,14 +1,9 @@
 # Personal AI
 
-Confluence-GPT was a project I created for getting answers from our Confluence pages using a chat interface.  The project had a few parts:
+Personal AI provides a simple UI that lets you ask questions and use documents on your local computer as context for answering the questions.
 
-An app that uses the Atlassian API to read the content of Confluence pages.
+It uses [LangChain DirectoryLoader](https://js.langchain.com/docs/integrations/document_loaders/file_loaders/directory) to parse, chunk, and generate text embeddings for files in a directory that you specify.  The embeddings are store in a [Pinecone Vector Database](https://www.pinecone.io/).
 
-A LangChain loader that parses the pages, generatestext embeddings from the Confluence content, and saves the embeddings to a Pinecone database.
-
-A Chat UI that lets you ask questions about the indexed content.
-
-These 3 separate apps have been combined into an installable Electron app I call __Personal AI__.
 
 ---
 
@@ -77,7 +72,7 @@ This context is then added to the question that gets sent as the prompt to ChatG
   ``` cmd
   git clone https://github.com/jonfleming/PersonalAI
   ```
-  
+
 2. Copy and edit sample.env
 
   ``` cmd
@@ -101,5 +96,5 @@ This context is then added to the question that gets sent as the prompt to ChatG
   npm install
   npm start
   ```
-  
+
 This should open your browser to log into Azure.
