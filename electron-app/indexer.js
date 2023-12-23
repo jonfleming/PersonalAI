@@ -107,6 +107,10 @@ function readConfig() {
     config = ini.parse(fs.readFileSync('./config.ini', 'utf-8'))
   } else {
     console.log('No config found')
+    config = {
+      currentDir: process.cwd(),
+      sessionId: `${Date.now()}`,
+    }
   }
 
   return config
