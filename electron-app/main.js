@@ -31,8 +31,10 @@ async function handleChat(prompt) {
     indexer.text()
     return
   }
+
   const matches = await indexer.similaritySearch(prompt, sessionId)
   const context = matches.map(x => x.pageContent).join(' ').substring(0, 6000)
+  console.log('context:', context)
 
   const data = {
     "model": "gpt-3.5-turbo",
@@ -126,9 +128,11 @@ function openWindow() {
   })
 
   ipcMain.on('chat:completion', async (_, prompt) => {
+    console.log('chat:completion', prompt)
     const response = await handleChat(prompt)
     response.id = requestId++
     mainWindow.webContents.send('chat:response', response)
+    console.log('chat:response', response)
   })
 
   app.on('activate', () => {
@@ -165,7 +169,7 @@ async function main() {
   indexer.writeConfig(config)
 
   if (!fs.existsSync(currentDir)) {
-    console.log(`Creating ${currentDir}`)
+    log.info(`Creating ${currentDir}`)
     fs.mkdirSync(currentDir)
   }
 

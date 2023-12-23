@@ -8,14 +8,11 @@ const { TextLoader } = require('langchain/document_loaders/fs/text')
 const { CSVLoader } = require('langchain/document_loaders/fs/csv')
 const { PDFLoader } = require('langchain/document_loaders/fs/pdf')
 const { DocxLoader } = require('langchain/document_loaders/fs/docx')
-const { UnstructuredLoader } = require('langchain/document_loaders/fs/unstructured')
 const { CharacterTextSplitter } = require('langchain/text_splitter')
 const { OpenAIEmbeddings } = require('langchain/embeddings/openai')
-const  xenova = require('./embeddings')
-const { MemoryVectorStore } = require('langchain/vectorstores/memory')
 const { PineconeClient } = require('@pinecone-database/pinecone')
 const { PineconeStore } = require('langchain/vectorstores/pinecone')
-const { convert } = require('html-to-text')
+// const { convert } = require('html-to-text')
 const log = require('electron-log');
 const azure = require('./azure-rest-api')
 
@@ -101,10 +98,10 @@ function getFilenames(directoryPath) {
 function readConfig() {
   let config = {}
   if (fs.existsSync('./config.ini')) {
-    console.log('Read config')
+    log.info('Read config')
     config = ini.parse(fs.readFileSync('./config.ini', 'utf-8'))
   } else {
-    console.log('No config found')
+    log.info('No config found')
     config = {
       currentDir: process.cwd(),
       sessionId: `${Date.now()}`,
