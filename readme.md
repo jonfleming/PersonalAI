@@ -25,19 +25,7 @@ It uses [LangChain DirectoryLoader](https://js.langchain.com/docs/integrations/d
 
 ## Setup
 
-You can install Personal AI by downloading the latest setup.exe from the [Releases](https://github.com/jonfleming/PersonalAI) page [https://github.com/jonfleming/PersonalAI](https://github.com/jonfleming/PersonalAI/releases).
-
-## Confluence Access
-
-To make Confluence API calls you need to set a couple of environment variables.
-
-``` cmd
-CONFLUENCE_USER=<your-confluence-user-name>
-CONFLUENCE_TOKEN=<your-confluence-api-token>
-CONFLUENCE_URL=https://mcghealth.atlassian.net/wiki
-```
-
-How to get your Confluence API Token [https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/)
+You can install Personal AI by downloading the latest setup.exe from the [Releases](https://github.com/jonfleming/PersonalAI) page [https://github.com/jonfleming/PersonalAI](https://github.com/jonfleming/PersonalAI/releases).  Before running Personal AI, you need to set a few environment variables:
 
 ## OpenAI API Access
 

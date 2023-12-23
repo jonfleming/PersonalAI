@@ -21,7 +21,6 @@ import ModeEditIcon from "@mui/icons-material/ModeEdit"
 import SendIcon from "@mui/icons-material/Send"
 import { TextField } from "@mui/material"
 import TextareaAutosize from "@mui/base/TextareaAutosize"
-import FetchDialog from "./FetchDialog"
 
 import { ToastContainer, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
@@ -311,6 +310,7 @@ const Prompt = () => {
     }
 
     if (event.key === 'Enter') {
+      event.preventDefault();
       handleSubmit()
     }
   };
@@ -353,20 +353,15 @@ const SelectedFolder = () => {
     if (window.api) {
       window.api.request("init:filelist", '')
 
+      window.api.response("init:filelist", () => {
+        console.log("init:filelist")
+        window.api.request("dialog:openFolder", '')
+      })
+
       window.api.response("dialog:reply", (folderPath) => {
         console.log("dialog:reply", folderPath)
         setPath(folderPath)
         window.curdir = folderPath
-      })
-
-      window.api.response("fetch:reply", (text) => {
-        console.log("fetch:reply", text)
-        toast.success(text, { toastId: "reply" })
-      })
-
-      window.api.response("fetch:done", (text) => {
-        console.log("fetch:done", text)
-        toast.success(text, { toastId: "done" })
       })
     }
   }, [])
@@ -394,21 +389,6 @@ const SelectedFolder = () => {
 export default function Sidebar() {
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
-  const [showFetch, setShowFetch] = React.useState(false)
-
-  const handleCancel = () => {
-    setShowFetch(false)
-  }
-
-  const handleFetch = (text) => {
-    setShowFetch(false)
-    if (window.api) {
-      window.api.request("fetch:searchTerm", {
-        outputPath: window.curdir,
-        searchTerm: text,
-      })
-    }
-  }
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -480,11 +460,6 @@ export default function Sidebar() {
         <Typography paragraph />
         <Conversation />
       </Main>
-      <FetchDialog
-        open={showFetch}
-        onSubmit={handleFetch}
-        onCancel={handleCancel}
-      />
     </Box>
   )
 }
