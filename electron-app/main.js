@@ -17,14 +17,8 @@ let currentDir = './index'
 let sessionId = ''
 let config = { currentDir, sessionId }
 let handlingInit = false
-let handlingOpenDialog = false
+let handlingSelect = false
 let mainWindow = null
-
-function needsIndexing(currentDir) {
-  const indexFile = path.join(currentDir, 'index.ini')
-
-  return !fs.existsSync(indexFile)
-}
 
 async function handleChat(prompt) {
   if (prompt === 'test') {
@@ -90,7 +84,7 @@ function openWindow() {
       return
     }
 
-    if (currentDir === process.cwd()) {
+    if (config.currentDir === process.cwd()) {
       log.info(`Triggering SelectFolder`)
       handlingInit = true
       mainWindow.webContents.send('init:filelist')
@@ -99,37 +93,15 @@ function openWindow() {
     }
 
     handlingInit = true
-    log.info(`Sending filelist: ${config.currentDir}`)
-    selectDirectory(config.currentDir)
-
-    try {
-      sessionId = await indexer.LoadIndex(config.currentDir, sessionId)
-    } catch (error) {
-      log.error(error)
-    }
-
-    handlingInit = false
+    await handleSelectFolder(config.currentDir)
   })
 
   ipcMain.on('dialog:openFolder', async () => {
-    if (handlingOpenDialog) {
+    if (handlingSelect) {
       return
     }
 
-    handlingOpenDialog = true
-    const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openDirectory']})
-
-    if (!canceled) {
-      selectDirectory(filePaths[0])
-
-      if (needsIndexing(config.currentDir)) {
-        await indexer.indexDirectory(config.currentDir, sessionId)
-      } else {
-        await indexer.createIndex()
-      }
-    }
-
-    handlingOpenDialog = false
+    await handleSelectFolder('')
   })
 
   ipcMain.on('chat:completion', async (_, prompt) => {
@@ -146,13 +118,44 @@ function openWindow() {
 }
 
 function selectDirectory(filepath) {
-  const files = indexer.getFilenames(filepath)
+  log.info(`Sending currentDir: ${filepath}`)
+
   mainWindow.webContents.send('dialog:reply', filepath)
-  mainWindow.webContents.send('dialog:filelist', files)
+  sendFileList(filepath)
 
   config.currentDir = filepath
-  config.sessionId = indexer.saveIndex(config.currentDir)
   indexer.writeConfig(config)
+}
+
+function sendFileList(filepath) {
+  const files = indexer.getFilenames(filepath)
+  log.info(`Sending filelist: ${JSON.stringify(files, null, 2)}`)
+  mainWindow.webContents.send('dialog:filelist', files)
+}
+
+async function handleSelectFolder(filepath) {
+  log.info(`Selected folder: ${filepath}`)
+
+  let response = null
+  let selected = true
+  handlingSelect = true
+
+  if (!filepath) {
+    response = await dialog.showOpenDialog({ properties: ['openDirectory']})
+    selected = !response.canceled
+    filepath = response.filePaths[0]
+  }
+
+  if (selected && filepath) {
+    selectDirectory(filepath)
+    sessionId = await indexer.LoadOrCreateIndex(filepath, sessionId)
+    mainWindow.webContents.send('indexing:complete', '')
+    config.sessionId = sessionId
+    config.currentDir = filepath
+    indexer.writeConfig(config)
+  }
+
+  handlingSelect = false
 }
 
 app.whenReady().then(() => {
@@ -172,11 +175,6 @@ async function main() {
   sessionId = config.sessionId
 
   indexer.writeConfig(config)
-
-  if (!fs.existsSync(currentDir)) {
-    log.info(`Creating ${currentDir}`)
-    fs.mkdirSync(currentDir)
-  }
 
   openWindow()
 }

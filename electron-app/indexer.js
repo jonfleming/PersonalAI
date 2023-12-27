@@ -18,7 +18,7 @@ const azure = require('./azure-rest-api')
 
 require('dotenv').config()
 
-const fileExtensions = ['.txt', '.xslx', '.docx', '.pdf', '.csv', '.html']
+const fileExtensions = ['.txt', '.xslx', '.docx', '.pdf', '.csv', '.html','.md']
 const indexIni = 'index.ini'
 const spaces = {}
 let vectorStore = null
@@ -34,15 +34,15 @@ const htmlOptions = {
 }
 
 async function similaritySearch(prompt, sessionId) {
-  const filter = (doc) => doc.metadata.sessionId === sessionId
-  const result = await vectorStore.similaritySearch(prompt, 30, filter)
+  const result = await vectorStore.similaritySearch(prompt, 30, {sessionId})
   log.info(result)
 
   return result
 }
 
-async function indexDirectory(directoryPath, sessionId) {
-  await createIndex()
+async function indexDirectory(directoryPath) {
+  await createVectorStore()
+  sessionId = saveIndex(directoryPath)
 
   const loader = new DirectoryLoader(directoryPath, {
       '.txt':  (path) => new TextLoader(path),
@@ -60,13 +60,15 @@ async function indexDirectory(directoryPath, sessionId) {
   splitDocs.forEach((doc) => (doc.metadata.sessionId = sessionId))
 
   try {
+    log.info('Adding documents to index...')
     await vectorStore.addDocuments(splitDocs)
   } catch (error) {
     log.error(error)
   }
 
-  sessionId = saveIndex(directoryPath)
   log.info('indexed ', directoryPath)
+
+  return sessionId
 }
 
 function getFilenames(directoryPath) {
@@ -103,7 +105,7 @@ function readConfig() {
   } else {
     log.info('No config found')
     config = {
-      currentDir: process.cwd(),
+      currentDir: null,
       sessionId: `${Date.now()}`,
     }
   }
@@ -115,8 +117,9 @@ function writeConfig(config) {
   fs.writeFileSync('./config.ini', ini.stringify(config))
 }
 
-async function createIndex() {
+async function createVectorStore() {
   if (vectorStore) {
+    log.info('VectorStore already exists')
     return
   }
 
@@ -127,22 +130,26 @@ async function createIndex() {
   });
   const pineconeIndex = client.Index(process.env.PINECONE_INDEX);
   const embeddings = new OpenAIEmbeddings()
+
+  log.info('Creating VectorStore...')
   vectorStore = await PineconeStore.fromExistingIndex(embeddings, { pineconeIndex });
 }
 
-async function LoadIndex(directoryPath, sessionId) {
-  log.info('Loading index...', directoryPath)
+async function LoadOrCreateIndex(directoryPath, sessionId) {
+  log.info('Checking for index...', directoryPath)
   const indexFile = path.join(directoryPath, indexIni)
 
   if (!vectorStore) {
-    await createIndex()
+    await createVectorStore()
   }
   if (fs.existsSync(indexFile)) {
     const index = ini.parse(fs.readFileSync(indexFile, 'utf-8'))
+    log.info('Loading existing session/index...', index.sessionId)
     sessionId = index.sessionId
   } else {
     try {
-      await indexDirectory(directoryPath, sessionId)
+      log.info('Indexing directory...', directoryPath)
+      sessionId = await indexDirectory(directoryPath)
     } catch (error) {
       log.error(error)
     }
@@ -177,8 +184,8 @@ function test() {
 module.exports = {
   getFilenames,
   similaritySearch,
-  createIndex,
-  LoadIndex,
+  createVectorStore,
+  LoadOrCreateIndex,
   saveIndex,
   indexDirectory,
   readConfig,

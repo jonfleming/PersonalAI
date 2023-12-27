@@ -348,6 +348,7 @@ const Prompt = () => {
 
 const SelectedFolder = () => {
   const [path, setPath] = React.useState('')
+  const toasting = useRef(false)
 
   useEffect(() => {
     if (window.api) {
@@ -362,6 +363,16 @@ const SelectedFolder = () => {
         console.log("dialog:reply", folderPath)
         setPath(folderPath)
         window.curdir = folderPath
+      })
+
+      window.api.response("indexing:complete", () => {
+        if (!toasting.current) {
+          toasting.current = true
+          console.log("indexing:complete")
+          toast.info("indexing:complete")
+        }
+
+        toasting.current = false
       })
     }
   }, [])
